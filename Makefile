@@ -1,5 +1,8 @@
 SRCS = srcs/draw.c \
 	   srcs/main.c \
+	   srcs/init_rt_info.c \
+	   srcs/error_messages.c \
+	   
 
 OBJS = ${patsubst $(SRCS_DIR)%.c,  $(OBJS_DIR)%.o, $(SRCS)}
 

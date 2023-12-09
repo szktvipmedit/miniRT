@@ -25,18 +25,25 @@
 
 typedef struct s_rt
 {
-    int				**z_values;
 	void			*mlx_ptr;
 	void			*win_ptr;
 	void			*img_ptr;
 	char			*data_addr;
 	int				size_line;
-	int				bit_per_pixel;
+	int				bit_per_pixel; 
 	int				endian;
 }               t_rt;
 
-
-
-
+//draw.c
 void draw(t_rt  *rt_info);
+
+//error_messages.c
+void	error_malloc(void);
+
+//init_rt_info.c
+void	image_init(t_rt *rt_info);
+void    rt_info_init(t_rt *rt_info);
+
+
+
 #endif
