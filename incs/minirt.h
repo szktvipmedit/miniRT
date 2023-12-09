@@ -11,7 +11,7 @@
 #define WIDTH 1920
 #define HEIGHT 1080
 
-//keys--------------------------
+//key--------------------------
 # define ESC 53
 # define PLUS 24
 # define MINUS 27
@@ -22,9 +22,7 @@
 
 //error messages---------------
 #define ERROR_MALLOC "Error: malloc failed!\n"
-#define ERROR_ARG_CNT "The number of arguments is different\n"
 
-//structs-----------------------
 typedef struct s_rt
 {
 	void			*mlx_ptr;
@@ -36,8 +34,6 @@ typedef struct s_rt
 	int				endian;
 }               t_rt;
 
-
-//functions-----------------------
 //draw.c
 void draw(t_rt  *rt_info);
 
