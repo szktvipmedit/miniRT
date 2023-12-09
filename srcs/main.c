@@ -28,12 +28,16 @@ static int	deal_key(int key, t_rt *rt_info)
 int main(int argc, char **argv)
 {
     t_rt    *rt_info;
-    rt_info = (t_rt *)malloc(sizeof(t_rt));
-    (void)argc;
-    (void)argv;
-    rt_info_init(rt_info);
-    draw(rt_info);
-    mlx_key_hook(rt_info->win_ptr, deal_key, rt_info);
-    mlx_hook(rt_info->win_ptr, 17, 1L << 17, close_window, rt_info);
-    mlx_loop(rt_info->mlx_ptr);
+    if(argc == 2)
+    {
+        rt_info = (t_rt *)malloc(sizeof(t_rt));
+        read_info(rt_info, argv[1]);
+        rt_info_init(rt_info);
+        draw(rt_info);
+        mlx_key_hook(rt_info->win_ptr, deal_key, rt_info);
+        mlx_hook(rt_info->win_ptr, 17, 1L << 17, close_window, rt_info);
+        mlx_loop(rt_info->mlx_ptr);
+    }
+    else
+        arg_cnt_error();
 }
