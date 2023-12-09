@@ -21,8 +21,7 @@ ${OBJS_DIR}%.o: ${SRCS_DIR}%.c
 
 #gcc *.c libft/libft.a minilibx_macos/libmlx.a -framework OpenGL -framework AppKit
 ${NAME}: ${LIBFT} ${OBJS}
-	${CC} ${CFLAGS} -c ${SRCS}
-	${CC} ${CFLAGS} -o $@ ${SRCS} ${LIBFT} ${MLX} -framework OpenGL -framework AppKit 
+	${CC} ${CFLAGS} -o $@ ${OBJS} ${LIBFT} ${MLX} -framework OpenGL -framework AppKit 
 
 ${LIBFT}:
 	make -C libft

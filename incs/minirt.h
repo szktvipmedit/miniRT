@@ -2,6 +2,7 @@
 # define MINIRT_H
 
 #include "../libft/libft.h"
+#include "../minilibx_macos/mlx.h"
 #include <math.h>
 #include <stdlib.h>
 #include <stdio.h>
