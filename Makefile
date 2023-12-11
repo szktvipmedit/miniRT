@@ -16,7 +16,7 @@ SRCS_DIR = srcs/
 OBJS_DIR = objs/
 INCS_DIR = incs/
 
-all: ${NAME} ${MLX} ;
+all: ${NAME}
 
 ${OBJS_DIR}%.o: ${SRCS_DIR}%.c
 	mkdir -p $(@D)
@@ -24,13 +24,14 @@ ${OBJS_DIR}%.o: ${SRCS_DIR}%.c
 
 #gcc *.c libft/libft.a minilibx_macos/libmlx.a -framework OpenGL -framework AppKit
 ${NAME}: ${LIBFT} ${OBJS}
+	make -C minilibx_macos
 	${CC} ${CFLAGS} -o $@ ${OBJS} ${LIBFT} ${MLX} -framework OpenGL -framework AppKit 
 
 ${LIBFT}:
 	make -C libft
 
-${MLX}:
-	make -C minilibx_macos
+# ${MLX}:
+# 	make -C minilibx_macos
 
 clean: 
 	make fclean -C libft
