@@ -68,6 +68,7 @@ void draw(t_rt  *rt_info)
 	int	x;
 	int	y;
 	int	color;
+
 	t_vec3 camera_vec;
 	camera_vec = vec3_init(0, 0, -5);
 
@@ -80,6 +81,13 @@ void draw(t_rt  *rt_info)
 
 	t_vec3	pw = vec3_init(0, 0, 0);
 	pw.z = 0;
+
+	double li = 1.0;//光源の光の強度(light_intensity)
+	double ai = 0.1;//環境光の強度(ambient_intensity)
+	double ka = 0.01;//環境光反射係数(k_amb)
+	double kd = 0.69;//拡散反射係数(k_dif)
+	double ks = 0.3;//鏡面反射係数(k_spe)
+	double shininess = 8;//光沢度
 	
 	y = 0;
 	while (y < HEIGHT)
@@ -114,6 +122,8 @@ void draw(t_rt  *rt_info)
 
 			if (t > 0)
 			{
+				double radince_amb = ka * ai;//環境光の反射光の放射輝度𝑅𝑎を計算する𝑅𝑎=𝑘𝑎x𝐼𝑎
+
 				t_vec3	pi = vec3_add(camera_vec, vec3_mult(eye_dir, t));//交点位置𝐩i→=𝐩e→+𝑡𝐝e→
 				t_vec3	light_dir = vec3_sub(light_vec, pi);//入射ベクトル
 				light_dir = vec3_normalize(light_dir);//正規化が必要であることに注意せよ
@@ -122,7 +132,22 @@ void draw(t_rt  *rt_info)
 
 				double nldot = constrain(vec3_dot(light_dir, sphere_n), 0, 1);//入射ベクトルと法線ベクトルの内積を計算し、0=< =<1に制限する
 
-				int gray = (int)(255 * nldot);//以下3行はchatGPT。まだよくわからない
+				double radince_dif = kd * li * nldot;//直接光の拡散反射光の放射輝度𝑅𝑑を計算する．𝑅𝑑=𝑘𝑑x𝐼𝑖(𝐧⃗ ⋅ℓ⃗ )
+				double radince_spe = 0.0;//以下の条件に当てはまらない時の直接光の鏡面反射光の放射輝度𝑅𝑠はゼロとする．
+				if (nldot > 0)
+				{
+					t_vec3	refdir = vec3_sub(vec3_mult(sphere_n, 2 * nldot), light_dir);//正反射ベクトル𝐫⃗ を計算する．𝐫⃗ =2(𝐧⃗ ⋅ℓ⃗ )𝐧⃗ −ℓ⃗
+					t_vec3	inv_eye_dir = vec3_mult(eye_dir, -1);//視線ベクトルの逆ベクトル𝐯⃗ を計算する𝐯⃗ =−𝐝e→
+					inv_eye_dir = vec3_normalize(inv_eye_dir);//正規化が必要であることに注意せよ
+					
+					double vrdot = constrain(vec3_dot(refdir, inv_eye_dir), 0, 1);//正反射ベクトルと視線ベクトルの逆ベクトルの内積を計算し制限
+
+					radince_spe = ks * li * pow(vrdot, shininess);//直接光の鏡面反射光の放射輝度𝑅𝑠を計算する𝑅𝑠=𝑘𝑠𝐼𝑖(𝐯⃗ ⋅𝐫⃗ )𝛼
+				}
+
+				double radiance = constrain(radince_amb + radince_dif + radince_spe, 0, 1);//反射光の放射輝度𝑅𝑟を計算する𝑅𝑟=𝑅𝑎+𝑅𝑑+𝑅𝑠
+
+				int gray = (int)(255 * radiance);//以下3行はchatGPT。まだよくわからない
 				gray = constrain(gray, 0, 255);
 				color = (gray << 16) | (gray << 8) | gray;
 			}
