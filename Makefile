@@ -10,7 +10,7 @@ NAME = miniRT
 LIBFT = libft/libft.a
 MLX = minilibx_macos/libmlx.a
 CC	= cc
-CFLAGS = -Wall -Wextra -Werror
+# CFLAGS = -Wall -Wextra -Werror
 
 SRCS_DIR = srcs/
 OBJS_DIR = objs/
