@@ -23,7 +23,7 @@ ${OBJS_DIR}%.o: ${SRCS_DIR}%.c
 	${CC} ${CFLAGS} -I $(INCS_DIR) -c $< -o $@
 
 #gcc *.c libft/libft.a minilibx_macos/libmlx.a -framework OpenGL -framework AppKit
-${NAME}: ${LIBFT} ${OBJS}
+${NAME}: ${LIBFT} ${OBJS} ${MLX}
 	${CC} ${CFLAGS} -o $@ ${OBJS} ${LIBFT} ${MLX} -framework OpenGL -framework AppKit 
 
 ${LIBFT}:
@@ -38,6 +38,7 @@ clean:
 	rm -rf ${OBJS_DIR}
 
 fclean: clean
+	make clean -C minilibx_macos
 	rm -rf ${NAME}
 
 re: fclean all ;

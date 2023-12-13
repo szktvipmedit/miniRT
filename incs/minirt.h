@@ -8,8 +8,8 @@
 #include <stdio.h>
 #include <fcntl.h>
 
-#define WIDTH 1920
-#define HEIGHT 1080
+#define WIDTH 1080
+#define HEIGHT 720
 
 //key--------------------------
 # define ESC 53
