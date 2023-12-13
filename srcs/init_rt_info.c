@@ -5,11 +5,11 @@ void	image_init(t_rt *rt_info)
 	rt_info->img_ptr = mlx_new_image(rt_info->mlx_ptr, WIDTH, HEIGHT);
 	if (!rt_info->img_ptr)
 		error_malloc();
-	rt_info->data_addr = mlx_get_data_addr(rt_info->img_ptr,
+	rt_info->pixel_addr = mlx_get_pixel_addr(rt_info->img_ptr,
 			&rt_info->bit_per_pixel,
 			&rt_info->size_line,
 			&rt_info->endian);
-	if (!rt_info->data_addr)
+	if (!rt_info->pixel_addr)
 		error_malloc();
 }
 

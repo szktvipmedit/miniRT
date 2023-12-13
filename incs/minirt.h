@@ -28,7 +28,7 @@ typedef struct s_rt
 	void			*mlx_ptr;
 	void			*win_ptr;
 	void			*img_ptr;
-	char			*data_addr;
+	char			*pixel_addr;
 	int				size_line;
 	int				bit_per_pixel; 
 	int				endian;

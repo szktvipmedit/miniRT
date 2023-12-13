@@ -14,7 +14,7 @@ MiniLibX - Manipulating images
 .nf
 .I char *
 .fi
-.B mlx_get_data_addr
+.B mlx_get_pixel_addr
 (
 .I void *img_ptr, int *bits_per_pixel, int *size_line, int *endian
 );
@@ -93,7 +93,7 @@ and
 .I y
 ) coordinates define where the image should be placed in the window.
 
-.B mlx_get_data_addr
+.B mlx_get_pixel_addr
 () returns information about the created image, allowing a user
 to modify it later. The
 .I img_ptr
@@ -113,7 +113,7 @@ little endian (
 .I endian
 == 1).
 
-.B mlx_get_data_addr
+.B mlx_get_pixel_addr
 returns a
 .I char *
 address that represents the begining of the memory area where the image
