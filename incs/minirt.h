@@ -8,8 +8,8 @@
 #include <stdio.h>
 #include <fcntl.h>
 
-#define WIDTH 1080
-#define HEIGHT 720
+#define WIDTH 512
+#define HEIGHT 512
 
 //key--------------------------
 # define ESC 53
@@ -22,6 +22,7 @@
 
 //error messages---------------
 #define ERROR_MALLOC "Error: malloc failed!\n"
+
 
 typedef struct s_rt
 {

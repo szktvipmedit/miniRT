@@ -9,7 +9,6 @@ void	image_init(t_rt *rt_info)
 			&rt_info->bit_per_pixel,
 			&rt_info->size_line,
 			&rt_info->endian);
-	printf("rt_info->size_line = %i\n", rt_info->size_line);
 	if (!rt_info->data_addr)
 		error_malloc();
 }
@@ -23,6 +22,9 @@ void    rt_info_init(t_rt *rt_info)
 	if (!rt_info->win_ptr)
 		error_malloc();
 	image_init(rt_info);
+
+
+
 }
 
 
