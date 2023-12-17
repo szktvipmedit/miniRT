@@ -22,9 +22,6 @@ void    rt_info_init(t_rt *rt_info)
 	if (!rt_info->win_ptr)
 		error_malloc();
 	image_init(rt_info);
-
-
-
 }
 
 

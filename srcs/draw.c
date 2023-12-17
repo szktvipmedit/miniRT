@@ -1,12 +1,5 @@
 #include "../incs/minirt.h"
 
-typedef struct s_vector
-{
-	double	x;
-	double	y;
-	double	z;
-}	t_vector;
-
 t_vector init_vector(double x, double y, double z)
 {
     t_vector new;
@@ -15,6 +8,8 @@ t_vector init_vector(double x, double y, double z)
     new.z = z;
     return new;
 }
+
+
 
 t_vector ft_add_vec(t_vector vec1, t_vector vec2)
 {
@@ -42,6 +37,26 @@ t_vector    ft_normalize_vec(t_vector primitive_vec)
 {
     double vec_mag = ft_get_magnitude_vec(primitive_vec);
     return ft_mult_vec(primitive_vec, 1/vec_mag);
+}
+
+int intersection_test(t_ray *ray, t_shape *shape, t_intersection_point *inter_p)
+{
+    
+    free(inter_p);
+    inter_p = 0;
+    return 0;
+}
+
+int get_nearest_shape(t_scene *scene, t_ray *ray, double max_dist, int exit_once_found, t_shape **out_shape, t_intersection_point *inter_p)
+{
+    free(inter_p);
+    inter_p = 0;
+    return 0;
+}
+
+int raytrace(const t_scene *scene, const t_ray *ray, t_color *color)
+{
+    return 0;
 }
 
 double get_t_surface_hit_light(double t1, double t2)
@@ -97,6 +112,8 @@ double ft_constrain(double v, double vmin, double vmax) {
 
 void draw(t_rt  *rt_info)
 {
+    t_scene scene;
+    
     t_vector    viewpoint;
     t_vector    screen;
     t_vector    sphere;

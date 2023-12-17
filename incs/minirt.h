@@ -35,6 +35,84 @@ typedef struct s_rt
 	int				endian;
 }               t_rt;
 
+typedef struct s_color
+{
+    double  r;
+    double  g;
+    double  b;
+}           t_color;
+
+typedef struct s_vector
+{
+	double	x;
+	double	y;
+	double	z;
+}	t_vector;
+
+typedef struct s_ray
+{
+    t_vector start;
+    t_vector direction;
+}           t_ray;
+
+typedef struct s_sphere
+{
+    t_vector center;
+    double radius;
+}           t_sphere;
+
+typedef struct s_plane
+{
+    t_vector normal;
+    t_vector position;
+}               t_plane;
+
+typedef struct s_material
+{
+    t_color    ambient_ref;
+    t_color     diffuse_ref;
+    t_color     specular_ref;
+    double      shininess;
+}           t_material;
+#define SPHERE 0;
+#define PLANE 1;
+typedef struct s_shape
+{
+    ssize_t shape_type;
+    t_sphere *sphere;
+    t_plane *plane;
+
+    t_material material;
+}           t_shape;
+
+
+#define LT_POINT 0;
+#define LT_DIRECTIONAL 1; 
+typedef struct s_light
+{
+    ssize_t type;
+    t_vector    vector;
+    t_color     illuminance;
+}           t_light;
+
+typedef struct s_scene
+{
+    t_shape *shapes;
+    size_t  num_shapes_capacity;
+    size_t num_shapes;
+    t_light *lights;
+    size_t num_lights_capacity;
+    size_t num_lights;
+    t_color ambient_illuminance;
+}               t_scene;
+
+typedef struct s_intersection_point
+{
+    double distance;
+    t_vector position;
+    t_vector normal;
+}               t_intersection_point;
+
 //draw.c
 void draw(t_rt  *rt_info);
 
