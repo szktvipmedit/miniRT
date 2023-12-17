@@ -71,7 +71,7 @@ int main()
   vector_t pw;                        /* 三次元空間でのスクリーン座標 */
 
   scene_setting(&scene);
-  
+  shape_t *dup_scene_shapes = scene.shapes;
   printf("P3\n");
   printf("%d %d\n", WIDTH, HEIGHT);
   printf("255\n");
@@ -99,7 +99,7 @@ int main()
           g = 255 * CLAMP(col.g, 0, 1);
           b = 255 * CLAMP(col.b, 0, 1);
 
-          printf("%d %d %d\n", r, g, b);
+          // printf("%d %d %d\n", r, g, b);
           int i = (y * rt_info.size_line) + (x * (rt_info.bit_per_pixel / 8));
           rt_info.data_addr[i] = b;
           rt_info.data_addr[++i] = g;
@@ -108,10 +108,11 @@ int main()
     }/* for */
  mlx_put_image_to_window(rt_info.mlx_ptr, rt_info.win_ptr, rt_info.img_ptr, 0, 0); 
   free(scene.lights);
-  free(scene.shapes);
+  free(dup_scene_shapes);
   mlx_key_hook(rt_info.win_ptr, deal_key, &rt_info);
     mlx_hook(rt_info.win_ptr, 17, 1L << 17, close_window, &rt_info);
     mlx_loop(rt_info.mlx_ptr);
   return 0;
   
 }/* int main() */
+

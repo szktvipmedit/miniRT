@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include <math.h>
 #include <float.h>
-#include "vector_utils.h"
-#include "raytracing.h"
+#include "../incs/vector_utils.h"
+#include "../incs/raytracing.h"
 
 void scene_setting(scene_t *scene)
 {
@@ -23,11 +23,11 @@ void scene_setting(scene_t *scene)
 	     1.0);          /* 球の半径 */
   
   /* 平面の場合：第二引数にST_PLANEを渡す．この場合，追加で6つの実数を渡す． */
-  /*
-  init_shape(&scene->shapes[0], ST_PLANE,
-	     0.0, -1.0, 0.0, 平面が通る点の位置
-	     0.0, 1.0, 0.0); 平面の法線ベクトル
-  */
+  
+  init_shape(&scene->shapes[1], ST_PLANE,
+	     0.0, -1.0, 0.0, //平面が通る点の位置
+	     0.0, 1.0, 0.0); //平面の法線ベクトル
+  
   /* 補足：vector_t構造体に値を設定する場合は以下のように，SET_VECTORマクロを使うことができる． */
   /* SET_VECTOR(scene->shapes[0].data.sphere.center, 0, 5, 5); */
 
@@ -40,8 +40,12 @@ void scene_setting(scene_t *scene)
 		0.69, 0.00, 0.00,  /* 拡散反射係数(RGB) */
 		0.30, 0.30, 0.30,  /* 鏡面反射率(RGB)   */
 		8.0); /* 光沢度 */
-  
-  scene->num_shapes = 1; /* 物体リストに，実際に格納した物体の数 */
+    init_material(&scene->shapes[1].material,
+		0.01, 0.01, 0.01,  /* 環境光係数(RGB)   */
+		0.69, 0.69, 0.69,  /* 拡散反射係数(RGB) */
+		0.30, 0.30, 0.30,  /* 鏡面反射率(RGB)   */
+		8.0); /* 光沢度 */
+  scene->num_shapes = 2; /* 物体リストに，実際に格納した物体の数 */
                          /* 物体数を変えた場合はそれに合わせて書き換えること． */
                          /* 物体リストの先頭 num_shapes 個は初期化されている必要がある． */
   /* ************************************************** */

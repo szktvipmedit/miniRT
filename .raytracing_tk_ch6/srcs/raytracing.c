@@ -33,21 +33,24 @@ static float ft_constrain(float v, double vmin, double vmax) {
 int raytrace(const scene_t* scene, const ray_t *eye_ray, colorf_t *out_col)
 {
     intersection_point_t inter_p;
-    if(intersection_test(scene->shapes, eye_ray, &inter_p))
+    shape_t *shapes;
+    shapes = malloc(sizeof(shape_t));
+    if(get_nearest_shape(scene, eye_ray, FLT_MAX, 0, &shapes, &inter_p))
     {
       colorf_t amb_rd; 
-      amb_rd.r = scene->shapes->material.ambient_ref.r * scene->ambient_illuminance.r;
-      amb_rd.g = scene->shapes->material.ambient_ref.g * scene->ambient_illuminance.g;
-      amb_rd.b = scene->shapes->material.ambient_ref.b * scene->ambient_illuminance.b;
+      amb_rd.r = shapes->material.ambient_ref.r * scene->ambient_illuminance.r;
+      amb_rd.g = shapes->material.ambient_ref.g * scene->ambient_illuminance.g;
+      amb_rd.b = shapes->material.ambient_ref.b * scene->ambient_illuminance.b;
 
       colorf_t dif_rd;
       vector_t light = scene->lights->vector;
       vector_t light_dir = ft_sub_vec(light, inter_p.position);
       normalize(&light_dir);
       float nldot = dot(&inter_p.normal, &light_dir);
-      dif_rd.r = ft_constrain(nldot, 0, 1) * scene->shapes->material.diffuse_ref.r * scene->lights->illuminance.r;
-      dif_rd.g = ft_constrain(nldot, 0, 1) * scene->shapes->material.diffuse_ref.g * scene->lights->illuminance.g;
-      dif_rd.b = ft_constrain(nldot, 0, 1) * scene->shapes->material.diffuse_ref.b * scene->lights->illuminance.b;
+      dif_rd.r = ft_constrain(nldot, 0, 1) * shapes->material.diffuse_ref.r * scene->lights->illuminance.r;
+      dif_rd.g = ft_constrain(nldot, 0, 1) * shapes->material.diffuse_ref.g * scene->lights->illuminance.g;
+      dif_rd.b = ft_constrain(nldot, 0, 1) * shapes->material.diffuse_ref.b * scene->lights->illuminance.b;
+
       colorf_t sep_rd;
       sep_rd.r = 0;sep_rd.g = 0;sep_rd.b = 0;
       if(nldot > 0)
@@ -57,21 +60,14 @@ int raytrace(const scene_t* scene, const ray_t *eye_ray, colorf_t *out_col)
         normalize(&r_eye_ray);
         vector_t ref_vec = ft_sub_vec(ft_mult_vec(inter_p.normal, (nldot * 2)), light_dir);
         float vrdot = dot(&r_eye_ray, &ref_vec);
-        sep_rd.r = pow(ft_constrain(vrdot, 0, 1), scene->shapes->material.shininess) * scene->shapes->material.specular_ref.r * scene->lights->illuminance.r;
-        sep_rd.g = pow(ft_constrain(vrdot, 0, 1), scene->shapes->material.shininess) * scene->shapes->material.specular_ref.g * scene->lights->illuminance.g;
-        sep_rd.b = pow(ft_constrain(vrdot, 0, 1), scene->shapes->material.shininess) * scene->shapes->material.specular_ref.b * scene->lights->illuminance.b;
+        sep_rd.r = pow(ft_constrain(vrdot, 0, 1), shapes->material.shininess) * shapes->material.specular_ref.r * scene->lights->illuminance.r;
+        sep_rd.g = pow(ft_constrain(vrdot, 0, 1), shapes->material.shininess) * shapes->material.specular_ref.g * scene->lights->illuminance.g;
+        sep_rd.b = pow(ft_constrain(vrdot, 0, 1), shapes->material.shininess) * shapes->material.specular_ref.b * scene->lights->illuminance.b;
       }
+
       out_col->r = ft_constrain(amb_rd.r + dif_rd.r + sep_rd.r, 0, 1);
       out_col->g = ft_constrain(amb_rd.g + dif_rd.g + sep_rd.g, 0, 1);
       out_col->b = ft_constrain(amb_rd.b + dif_rd.b + sep_rd.b, 0, 1);
-      printf("%f %f %f の結果 -> ", amb_rd.r, dif_rd.r, sep_rd.r);
-      
-    }
-    else
-    {
-      out_col->r = 0.25;
-      out_col->g = 0.3725;
-      out_col->b = 0.9333333;
     }
     return 0;
 }/* int raytrace(const scene_t* scene, const ray_t *eye_ray, colorf_t *out_col) */
@@ -179,6 +175,7 @@ int get_nearest_shape(const scene_t* scene, const ray_t *ray, float max_dist, in
   size_t i;
   shape_t *nearest_shape = NULL;
   intersection_point_t nearest_intp;
+  nearest_intp.distance =FLT_MAX; 
   nearest_intp.distance = max_dist;
 
   for(i = 0; i < scene->num_shapes; ++i)
@@ -187,7 +184,6 @@ int get_nearest_shape(const scene_t* scene, const ray_t *ray, float max_dist, in
       intersection_point_t intp;
       
       res = intersection_test(&scene->shapes[i], ray, &intp);
-
       if ( res && intp.distance < nearest_intp.distance )
         {
           nearest_shape = &scene->shapes[i];
@@ -202,7 +198,6 @@ int get_nearest_shape(const scene_t* scene, const ray_t *ray, float max_dist, in
         *out_shape = nearest_shape;
       if ( out_intp )
         *out_intp = nearest_intp;
-      
       return 1;
     }
   else
