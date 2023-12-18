@@ -40,12 +40,21 @@ typedef struct
   vector_t position; /* 面が通る点の位置ベクトル */
 } plane_t;
 
+typedef enum
+{
+  MT_DEFAULT,/*通常の(完全鏡面反射を使用しない)質感*/
+  MT_PERFECT_REF,/*完全鏡面反射を使用する質感*/
+} material_type;
+
 typedef struct
 {
   colorf_t ambient_ref;   /* 環境光反射率(RGB) */
   colorf_t diffuse_ref;   /* 拡散反射率(RGB) */
   colorf_t specular_ref;  /* 鏡面反射率(RGB) */
-  float shininess;        /* 光沢度 */
+  float shininess;       /* 光沢度 */
+
+  material_type type;
+  colorf_t reflect_ref; /*完全鏡面反射光係数を指定する*/
 } material_t;
 
 typedef enum
@@ -100,6 +109,8 @@ typedef struct
 int intersection_test(const shape_t *shape, const ray_t* ray, intersection_point_t* out_intp);
 int get_nearest_shape(const scene_t* scene, const ray_t *ray, float max_dist, int exit_once_found,
                       shape_t **out_shape, intersection_point_t *out_intp);
+#define MAX_RECURSION 8
+int recursive_raytrace(const scene_t* scene, const ray_t *eye_ray, colorf_t *out_col, int recursion_level);
 int raytrace(const scene_t* scene, const ray_t *eye_ray, colorf_t *out_col);
 
 void init_shape(shape_t* shape, shape_type st, ...);
@@ -107,7 +118,8 @@ void init_material(material_t* mat,
 		   float ambR, float ambG, float ambB,
 		   float difR, float difG, float difB,
 		   float speR, float speG, float speB,
-		   float shns);
+		   float shns, material_type type,
+       float refR, float refG, float refB);
 void init_light(light_t* light, light_type lt,
 		float vx, float vy, float vz,
 		float illR, float illG, float illB);

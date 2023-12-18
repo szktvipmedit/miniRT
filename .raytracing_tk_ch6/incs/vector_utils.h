@@ -10,6 +10,11 @@ typedef struct {
   float x,y,z;
 } vector_t;
 
+vector_t init_vector(double x, double y, double z);
+vector_t ft_add_vec(vector_t vec1, vector_t vec2);
+vector_t ft_sub_vec(vector_t vec1, vector_t vec2);
+vector_t ft_mult_vec(vector_t vec, double mult);
+float ft_constrain(float v, double vmin, double vmax);
 float dot(const vector_t* a, const vector_t* b);
 float squared_norm(const vector_t*v);
 

@@ -1,8 +1,42 @@
-#include "vector_utils.h"
+#include "../incs/vector_utils.h"
 
 #include <stdio.h>
 #include <math.h>
 #include <string.h>
+
+vector_t init_vector(double x, double y, double z)
+{
+    vector_t new;
+    new.x = x;
+    new.y = y;
+    new.z = z;
+    return new;
+}
+
+vector_t ft_add_vec(vector_t vec1, vector_t vec2)
+{
+    return init_vector(vec1.x + vec2.x, vec1.y + vec2.y, vec1.z + vec2.z);
+}
+
+vector_t ft_sub_vec(vector_t vec1, vector_t vec2)
+{
+    return init_vector(vec1.x - vec2.x, vec1.y - vec2.y, vec1.z - vec2.z);
+}
+
+vector_t ft_mult_vec(vector_t vec, double mult)
+{
+    return init_vector(vec.x * mult, vec.y * mult, vec.z * mult);
+}
+
+float ft_constrain(float v, double vmin, double vmax) {
+    if (v < vmin) {
+        return vmin;
+    } else if (v > vmax) {
+        return vmax;
+    } else {
+        return v;
+    }
+}
 
 float dot(const vector_t* a, const vector_t* b)
 {
