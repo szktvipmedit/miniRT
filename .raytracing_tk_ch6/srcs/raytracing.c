@@ -13,6 +13,10 @@ static vector_t init_vector(double x, double y, double z)
     new.z = z;
     return new;
 }
+static vector_t ft_add_vec(vector_t vec1, vector_t vec2)
+{
+    return init_vector(vec1.x + vec2.x, vec1.y + vec2.y, vec1.z + vec2.z);
+}
 static vector_t ft_sub_vec(vector_t vec1, vector_t vec2)
 {
     return init_vector(vec1.x - vec2.x, vec1.y - vec2.y, vec1.z - vec2.z);
@@ -35,34 +39,39 @@ int raytrace(const scene_t* scene, const ray_t *eye_ray, colorf_t *out_col)
     intersection_point_t inter_p;
     shape_t *shapes;
     shapes = malloc(sizeof(shape_t));
-    if(get_nearest_shape(scene, eye_ray, FLT_MAX, 0, &shapes, &inter_p))
+  
+    colorf_t amb_rd = {shapes->material.ambient_ref.r * scene->ambient_illuminance.r,shapes->material.ambient_ref.g * scene->ambient_illuminance.g,shapes->material.ambient_ref.b * scene->ambient_illuminance.b};
+    colorf_t dif_rd = {0, 0, 0};
+    colorf_t sep_rd = {0, 0, 0};
+    if(get_nearest_shape(scene, eye_ray, FLT_MAX, 0, &shapes, &inter_p))//視線と物体の交点を見つける
     {
-      colorf_t amb_rd; 
-      amb_rd.r = shapes->material.ambient_ref.r * scene->ambient_illuminance.r;
-      amb_rd.g = shapes->material.ambient_ref.g * scene->ambient_illuminance.g;
-      amb_rd.b = shapes->material.ambient_ref.b * scene->ambient_illuminance.b;
-
-      colorf_t dif_rd;
       vector_t light = scene->lights->vector;
       vector_t light_dir = ft_sub_vec(light, inter_p.position);
+      //入射ベクトルが決定した時点で影の計算に入る     
+      float e = 1.0/512;
+      float dist_intp_light = norm(&light_dir);//{視線と物体の交点}と{light}の距離は正規化前の入射ベクトルと同じ
       normalize(&light_dir);
-      float nldot = dot(&inter_p.normal, &light_dir);
-      dif_rd.r = ft_constrain(nldot, 0, 1) * shapes->material.diffuse_ref.r * scene->lights->illuminance.r;
-      dif_rd.g = ft_constrain(nldot, 0, 1) * shapes->material.diffuse_ref.g * scene->lights->illuminance.g;
-      dif_rd.b = ft_constrain(nldot, 0, 1) * shapes->material.diffuse_ref.b * scene->lights->illuminance.b;
-
-      colorf_t sep_rd;
-      sep_rd.r = 0;sep_rd.g = 0;sep_rd.b = 0;
-      if(nldot > 0)
+      ray_t shadow_ray;
+      shadow_ray.start = ft_add_vec(inter_p.position, ft_mult_vec(light_dir, e));
+      shadow_ray.direction = light_dir;
+      if(!get_nearest_shape(scene, &shadow_ray, dist_intp_light, 1, &shapes, &inter_p))
       {
-        vector_t r_eye_ray;
-        r_eye_ray = ft_mult_vec(eye_ray->direction, -1);
-        normalize(&r_eye_ray);
-        vector_t ref_vec = ft_sub_vec(ft_mult_vec(inter_p.normal, (nldot * 2)), light_dir);
-        float vrdot = dot(&r_eye_ray, &ref_vec);
-        sep_rd.r = pow(ft_constrain(vrdot, 0, 1), shapes->material.shininess) * shapes->material.specular_ref.r * scene->lights->illuminance.r;
-        sep_rd.g = pow(ft_constrain(vrdot, 0, 1), shapes->material.shininess) * shapes->material.specular_ref.g * scene->lights->illuminance.g;
-        sep_rd.b = pow(ft_constrain(vrdot, 0, 1), shapes->material.shininess) * shapes->material.specular_ref.b * scene->lights->illuminance.b;
+        float nldot = dot(&inter_p.normal, &light_dir);
+        dif_rd.r = ft_constrain(nldot, 0, 1) * shapes->material.diffuse_ref.r * scene->lights->illuminance.r;
+        dif_rd.g = ft_constrain(nldot, 0, 1) * shapes->material.diffuse_ref.g * scene->lights->illuminance.g;
+        dif_rd.b = ft_constrain(nldot, 0, 1) * shapes->material.diffuse_ref.b * scene->lights->illuminance.b;
+
+        if(nldot > 0)
+        {
+          vector_t r_eye_ray;
+          r_eye_ray = ft_mult_vec(eye_ray->direction, -1);
+          normalize(&r_eye_ray);
+          vector_t ref_vec = ft_sub_vec(ft_mult_vec(inter_p.normal, (nldot * 2)), light_dir);
+          float vrdot = dot(&r_eye_ray, &ref_vec);
+          sep_rd.r = pow(ft_constrain(vrdot, 0, 1), shapes->material.shininess) * shapes->material.specular_ref.r * scene->lights->illuminance.r;
+          sep_rd.g = pow(ft_constrain(vrdot, 0, 1), shapes->material.shininess) * shapes->material.specular_ref.g * scene->lights->illuminance.g;
+          sep_rd.b = pow(ft_constrain(vrdot, 0, 1), shapes->material.shininess) * shapes->material.specular_ref.b * scene->lights->illuminance.b;
+        }
       }
 
       out_col->r = ft_constrain(amb_rd.r + dif_rd.r + sep_rd.r, 0, 1);
