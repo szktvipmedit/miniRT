@@ -10,7 +10,10 @@
 
 #define WIDTH 512
 #define HEIGHT 512
-
+#define SQR(x) ((x)*(x))
+#define MIN(a,b) (a < b ? a : b)
+#define MAX(a,b) (a > b ? a : b)
+#define CLAMP(v,minv,maxv) MIN(MAX(v,minv),maxv)
 //key--------------------------
 # define ESC 53
 # define PLUS 24

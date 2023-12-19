@@ -33,17 +33,21 @@ float ft_dot_vec(t_vector vec1, t_vector vec2)
     return (vec1.x * vec2.x + vec1.y * vec2.y + vec1.z * vec2.z);
 }
 
-
+float squared_norm(const t_vector *v)
+{
+  return SQR(v->x) + SQR(v->y) + SQR(v->z);
+}
+;
 void draw(t_rt  *rt_info)
 {
     t_vector    viewpoint;
     t_vector    screen;
-    t_vector    sphere;
+    t_vector    cylinder;
     float r = 1;
     int color;
     viewpoint = init_vector(0, 0, -5);
     screen = init_vector(0, 0, 0);
-    sphere = init_vector(0, 0, 5);
+    cylinder = init_vector(0, 0, 5);
     int y = 0;
     int x = 0;
     while(y < HEIGHT)
@@ -54,11 +58,25 @@ void draw(t_rt  *rt_info)
         {
             screen.x = ((2.0 * x) / (WIDTH - 1)) - 1;
             t_vector direct_vec =  ft_sub_vec(screen, viewpoint);
-            t_vector diff_vec = ft_sub_vec(viewpoint, sphere);//
-            float A = ft_dot_vec(direct_vec, direct_vec);
-            float B = 2 * ft_dot_vec(diff_vec, direct_vec);
-            float C = ft_dot_vec(diff_vec, diff_vec) - pow(r, 2);
-            float D = pow(B, 2) - (4 * A * C);
+            t_vector eye_dir = ft_sub_vec(viewpoint, cylinder);//
+            // float A = ft_dot_vec(direct_vec, direct_vec);
+            // float B = 2 * ft_dot_vec(diff_vec, direct_vec);
+            // float C = ft_dot_vec(diff_vec, diff_vec) - pow(r, 2);
+            // float D = pow(B, 2) - (4 * A * C);
+            t_vector cy_ray_direction = init_vector(0, 1, 0);//これは.rtファイルから入力された値による
+
+            t_vector tmp = ft_sub_vec(eye_dir, ft_mult_vec(cy_ray_direction, ft_dot_vec(eye_dir, cy_ray_direction)));
+
+            float A = squared_norm(&tmp);
+
+            t_vector delta_p = ft_sub_vec(eye_dir, cylinder);
+            tmp = ft_sub_vec(eye_dir, ft_mult_vec(cy_ray_direction,ft_dot_vec(eye_dir, cy_ray_direction)));
+            t_vector tmp2 = ft_sub_vec(delta_p, ft_mult_vec(cy_ray_direction,ft_dot_vec(delta_p, cy_ray_direction)));
+            float B = 2 * ft_dot_vec(tmp, tmp2);
+            tmp = ft_sub_vec(delta_p, ft_mult_vec(cy_ray_direction, ft_dot_vec(delta_p, cy_ray_direction)));
+            float C = squared_norm(&tmp) - SQR(0.1);
+
+            float D = SQR(B) - 4*A*C;
             if(D < 0)
                 color = 0x0000ff;
             else
