@@ -100,6 +100,9 @@ typedef struct
 {
       int recursion_level; /* 完全鏡面反射の再帰回数保持*/
       intersection_point_t inter_p; //視線と物体の交点情報
+      shape_t *shape;   /* intersectした物体の情報格納用 */
+      vector_t light_dir; /*入射方向ベクトル*/
+      ray_t     shadow_ray;
       colorf_t amb_rd; /* 環境光の輝度 */
       colorf_t dif_rd; /* 直接光の拡散反射輝度*/;
       colorf_t sep_rd; /* 直接光の鏡面反射輝度 */;

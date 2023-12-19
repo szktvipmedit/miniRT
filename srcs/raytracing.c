@@ -1,87 +1,168 @@
-#include <stdlib.h>
-#include <math.h>
+#include "../incs/raytracing.h"
 #include <float.h>
+#include <math.h>
 #include <stdarg.h>
 #include <stdio.h>
-#include "../incs/raytracing.h"
+#include <stdlib.h>
 
-
-
-int recursive_raytrace(const scene_t* scene, const ray_t *eye_ray, colorf_t *out_col, int recursion_level)
+void	set_color(colorf_t *col, float r, float g, float b)
 {
-    if(recursion_level > MAX_RECURSION)
-    {
-      return 0;
-    }
-    else
-    {
-      intersection_point_t inter_p;
-      shape_t *shapes;
-      shapes = malloc(sizeof(shape_t));
-      colorf_t amb_rd = {shapes->material.ambient_ref.r * scene->ambient_illuminance.r,shapes->material.ambient_ref.g * scene->ambient_illuminance.g,shapes->material.ambient_ref.b * scene->ambient_illuminance.b};
-      colorf_t dif_rd = {0, 0, 0};
-      colorf_t sep_rd = {0, 0, 0};
-      colorf_t ref_rd = {0, 0, 0};
-      if(get_nearest_shape(scene, eye_ray, FLT_MAX, 0, &shapes, &inter_p))//視線と物体の交点を見つける
-      {
-        vector_t light = scene->lights->vector;
-        vector_t light_dir = ft_sub_vec(light, inter_p.position);
-        //入射ベクトルが決定した時点で影の計算に入る     
-        float e = 1.0/512;
-        float dist_intp_light = norm(&light_dir);//{視線と物体の交点}と{light}の距離は正規化前の入射ベクトルと同じ
-        normalize(&light_dir);
-        ray_t shadow_ray;
-        shadow_ray.start = ft_add_vec(inter_p.position, ft_mult_vec(light_dir, e));
-        shadow_ray.direction = light_dir;
-        if(shapes->material.type == MT_PERFECT_REF)//shapeが完全鏡面反射するならば
-        {
-            vector_t r_eye_ray = ft_mult_vec(eye_ray->direction, -1);
-            normalize(&r_eye_ray);
-            float vndot = dot(&r_eye_ray, &inter_p.normal);
-            if(vndot > 0)
-            {
-              vector_t ref_eye_dir = ft_sub_vec(ft_mult_vec(inter_p.normal, 2 * vndot), r_eye_ray);
-              ray_t ref_ray;
-              ref_ray.start = ft_add_vec(inter_p.position, ft_mult_vec(ref_eye_dir, e));
-              ref_ray.direction = ref_eye_dir;
-              recursive_raytrace(scene, &ref_ray, &ref_rd,recursion_level + 1);
-              ref_rd.r = ft_constrain(vndot, 0, 1) * shapes->material.reflect_ref.r * ref_rd.r; 
-              ref_rd.g = ft_constrain(vndot, 0, 1) * shapes->material.reflect_ref.g * ref_rd.g; 
-              ref_rd.b = ft_constrain(vndot, 0, 1) * shapes->material.reflect_ref.b * ref_rd.b; 
-            }
-        }
-        if(!get_nearest_shape(scene, &shadow_ray, dist_intp_light, 1, &shapes, &inter_p))//視点と物体の交点から光源の間に物体がないため直接光が来る
-        {
-            float nldot = dot(&inter_p.normal, &light_dir);
-            dif_rd.r = ft_constrain(nldot, 0, 1) * shapes->material.diffuse_ref.r * scene->lights->illuminance.r;
-            dif_rd.g = ft_constrain(nldot, 0, 1) * shapes->material.diffuse_ref.g * scene->lights->illuminance.g;
-            dif_rd.b = ft_constrain(nldot, 0, 1) * shapes->material.diffuse_ref.b * scene->lights->illuminance.b;
+	col->r = r;
+	col->g = g;
+	col->b = b;
+}
+#define EPSILON 1.0 / 512
 
-            if(nldot > 0)
-            {
-              vector_t r_eye_ray;
-              r_eye_ray = ft_mult_vec(eye_ray->direction, -1);
-              normalize(&r_eye_ray);
-              vector_t ref_vec = ft_sub_vec(ft_mult_vec(inter_p.normal, (nldot * 2)), light_dir);
-              float vrdot = dot(&r_eye_ray, &ref_vec);
-              sep_rd.r = pow(ft_constrain(vrdot, 0, 1), shapes->material.shininess) * shapes->material.specular_ref.r * scene->lights->illuminance.r;
-              sep_rd.g = pow(ft_constrain(vrdot, 0, 1), shapes->material.shininess) * shapes->material.specular_ref.g * scene->lights->illuminance.g;
-              sep_rd.b = pow(ft_constrain(vrdot, 0, 1), shapes->material.shininess) * shapes->material.specular_ref.b * scene->lights->illuminance.b;
-            }
-        }
-
-        out_col->r = ft_constrain(amb_rd.r + dif_rd.r + sep_rd.r + ref_rd.r, 0, 1);
-        out_col->g = ft_constrain(amb_rd.g + dif_rd.g + sep_rd.g + ref_rd.g, 0, 1);
-        out_col->b = ft_constrain(amb_rd.b + dif_rd.b + sep_rd.b + ref_rd.b, 0, 1);
-      }
-
-    }
-    return 0;
-}/* int raytrace(const scene_t* scene, const ray_t *eye_ray, colorf_t *out_col) */
-
-int raytrace(const scene_t* scene, const ray_t *eye_ray, colorf_t *out_col)
+void	calc_perfect_refrect_radience(const scene_t *scene,
+		const ray_t *eye_ray, intersection_point_t *inter_p,
+		t_pixel_info *pixel_info)
 {
-  return recursive_raytrace(scene, eye_ray, out_col, 0);
+	vector_t	r_eye_ray;
+	float		vndot;
+	vector_t	ref_eye_dir;
+		ray_t ref_ray;
+
+	r_eye_ray = ft_mult_vec(eye_ray->direction, -1);
+	normalize(&r_eye_ray);
+	vndot = dot(&r_eye_ray, &inter_p->normal);
+	if (vndot > 0)
+	{
+		ref_eye_dir = ft_sub_vec(ft_mult_vec(inter_p->normal, 2 * vndot),
+				r_eye_ray);
+		ref_ray.start = ft_add_vec(inter_p->position, ft_mult_vec(ref_eye_dir,
+					EPSILON));
+		ref_ray.direction = ref_eye_dir;
+		recursive_raytrace(scene, &ref_ray, &pixel_info->ref_rd,
+			pixel_info->recursion_level + 1);
+		pixel_info->ref_rd.r = ft_constrain(vndot, 0, 1)
+			* pixel_info->shape->material.reflect_ref.r * pixel_info->ref_rd.r;
+		pixel_info->ref_rd.g = ft_constrain(vndot, 0, 1)
+			* pixel_info->shape->material.reflect_ref.g * pixel_info->ref_rd.g;
+		pixel_info->ref_rd.b = ft_constrain(vndot, 0, 1)
+			* pixel_info->shape->material.reflect_ref.b * pixel_info->ref_rd.b;
+	}
+}
+
+void	calc_ambiant_radience(const scene_t *scene, t_pixel_info *pixel_info)
+{
+	set_color(&pixel_info->amb_rd, scene->shapes->material.ambient_ref.r
+		* scene->ambient_illuminance.r, scene->shapes->material.ambient_ref.g
+		* scene->ambient_illuminance.g, scene->shapes->material.ambient_ref.b
+		* scene->ambient_illuminance.b);
+}
+
+void	calc_diffuse_reflection_radience(const scene_t *scene,
+		t_pixel_info *pixel_info, float nldot)
+{
+	set_color(&pixel_info->dif_rd, ft_constrain(nldot, 0, 1)
+		* pixel_info->shape->material.diffuse_ref.r
+		* scene->lights->illuminance.r, ft_constrain(nldot, 0, 1)
+		* pixel_info->shape->material.diffuse_ref.g
+		* scene->lights->illuminance.g, ft_constrain(nldot, 0, 1)
+		* pixel_info->shape->material.diffuse_ref.b
+		* scene->lights->illuminance.b);
+}
+void	calc_specular_reflection_radience(const scene_t *scene,
+		t_pixel_info *pixel_info, const ray_t *eye_ray, float nldot)
+{
+	vector_t	r_eye_ray;
+	vector_t	ref_vec;
+	float		vrdot;
+
+	r_eye_ray = ft_mult_vec(eye_ray->direction, -1);
+	normalize(&r_eye_ray);
+	ref_vec = ft_sub_vec(ft_mult_vec(pixel_info->inter_p.normal, (nldot * 2)),
+			pixel_info->light_dir);
+	vrdot = dot(&r_eye_ray, &ref_vec);
+	set_color(&pixel_info->sep_rd, pow(ft_constrain(vrdot, 0, 1),
+			pixel_info->shape->material.shininess)
+		* pixel_info->shape->material.specular_ref.r
+		* scene->lights->illuminance.r, pow(ft_constrain(vrdot, 0, 1),
+			pixel_info->shape->material.shininess)
+		* pixel_info->shape->material.specular_ref.g
+		* scene->lights->illuminance.g, pow(ft_constrain(vrdot, 0, 1),
+			pixel_info->shape->material.shininess)
+		* pixel_info->shape->material.specular_ref.b
+		* scene->lights->illuminance.b);
+}
+
+void	create_shadow_ray(t_pixel_info *pixel_info)
+{
+	pixel_info->shadow_ray.start = ft_add_vec(pixel_info->inter_p.position,
+			ft_mult_vec(pixel_info->light_dir, EPSILON));
+	pixel_info->shadow_ray.direction = pixel_info->light_dir;
+}
+
+void	calc_radience(const scene_t *scene, t_pixel_info *pixel_info,
+		const ray_t *eye_ray, float dist_intp_light)
+{
+	float	nldot;
+
+	if (pixel_info->shape->material.type == MT_PERFECT_REF) // shapeが完全鏡面反射するならば
+		calc_perfect_refrect_radience(scene, eye_ray, &pixel_info->inter_p,
+			pixel_info);
+	if (!get_nearest_shape(scene, &pixel_info->shadow_ray, dist_intp_light, 1,
+			&pixel_info->shape, &pixel_info->inter_p))
+		//視点と物体の交点から光源の間に物体がないため直接光が来る
+	{
+		nldot = dot(&pixel_info->inter_p.normal, &pixel_info->light_dir);
+		calc_diffuse_reflection_radience(scene, pixel_info, nldot);
+		if (nldot > 0)
+			calc_specular_reflection_radience(scene, pixel_info, eye_ray,
+				nldot);
+	}
+	calc_ambiant_radience(scene, pixel_info);
+}
+
+void	calc_color(const scene_t *scene, t_pixel_info *pixel_info,
+		const ray_t *eye_ray, colorf_t *out_col)
+{
+	float	dist_intp_light;
+
+	pixel_info->light_dir = ft_sub_vec(scene->lights->vector,
+			pixel_info->inter_p.position);
+	dist_intp_light = norm(&pixel_info->light_dir);
+		//{視線と物体の交点}と{light}の距離は正規化前の入射ベクトルと同じ
+	normalize(&pixel_info->light_dir);
+	//入射ベクトルが決定した時点で影の計算に入る
+	create_shadow_ray(pixel_info);
+	calc_radience(scene, pixel_info, eye_ray, dist_intp_light);
+	set_color(out_col, ft_constrain(pixel_info->amb_rd.r + pixel_info->dif_rd.r
+			+ pixel_info->sep_rd.r + pixel_info->ref_rd.r, 0, 1),
+		ft_constrain(pixel_info->amb_rd.g + pixel_info->dif_rd.g
+			+ pixel_info->sep_rd.g + pixel_info->ref_rd.g, 0, 1),
+		ft_constrain(pixel_info->amb_rd.b + pixel_info->dif_rd.b
+			+ pixel_info->sep_rd.b + pixel_info->ref_rd.b, 0, 1));
+}
+
+void	init_color(t_pixel_info *pixel_info)
+{
+	set_color(&pixel_info->dif_rd, 0, 0, 0);
+	set_color(&pixel_info->sep_rd, 0, 0, 0);
+	set_color(&pixel_info->ref_rd, 0, 0, 0);
+}
+
+int	recursive_raytrace(const scene_t *scene, const ray_t *eye_ray,
+		colorf_t *out_col, int recursion_level)
+{
+		t_pixel_info pixel_info;
+
+	if (recursion_level > MAX_RECURSION)
+		return (0);
+	else
+	{
+		pixel_info.recursion_level = recursion_level;
+		init_color(&pixel_info);
+		if (get_nearest_shape(scene, eye_ray, FLT_MAX, 0, &pixel_info.shape,
+				&pixel_info.inter_p)) //視線と物体の交点を見つける
+			calc_color(scene, &pixel_info, eye_ray, out_col);
+	}
+	return (0);
+} /* int raytrace(const scene_t* scene, const ray_t *eye_ray,
+	colorf_t *out_col) */
+int	raytrace(const scene_t *scene, const ray_t *eye_ray, colorf_t *out_col)
+{
+	return (recursive_raytrace(scene, eye_ray, out_col, 0));
 }
 
 int intersection_test(const shape_t *shape, const ray_t* ray, 
