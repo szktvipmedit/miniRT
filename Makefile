@@ -1,7 +1,11 @@
-SRCS = srcs/draw.c \
-	   srcs/main.c \
+SRCS = srcs/main.c \
 	   srcs/init_rt_info.c \
+	   srcs/create_image.c \
+	   srcs/create_image2.c \
 	   srcs/error_messages.c \
+	   srcs/raytracing.c \
+	   srcs/scene_setting1.c \
+	   srcs/vector_utils.c \
 	   
 
 OBJS = ${patsubst $(SRCS_DIR)%.c,  $(OBJS_DIR)%.o, $(SRCS)}
@@ -10,7 +14,7 @@ NAME = miniRT
 LIBFT = libft/libft.a
 MLX = minilibx_macos/libmlx.a
 CC	= cc
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -g
 
 SRCS_DIR = srcs/
 OBJS_DIR = objs/
