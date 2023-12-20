@@ -11,6 +11,7 @@
 
 # define ESC 53
 
+# define SHININESS 20.0//光沢度
 # define EPSILON (1.0/512)
 # define SHADOW -1
 
@@ -46,8 +47,8 @@ typedef struct	s_sphere
 
 typedef struct	s_plane
 {
-	t_vec3	normal;		//法線ベクトル
 	t_vec3	position;	//平面が通る点の位置ベクトル
+	t_vec3	normal;		//法線ベクトル
 }	t_plane;
 
 typedef struct	s_cylinder
@@ -55,13 +56,8 @@ typedef struct	s_cylinder
 	t_vec3	position;	//円筒の底円の中心位置
 	double	radius;		//半径
 	double	height;		//高さ
+	t_vec3	normal;		//法線ベクトル
 }	t_cylinder;
-
-typedef struct	s_material
-{
-	t_color3	diffuse_ref;	//拡散反射率(RGB)
-	double		shininess;		//光沢度
-}	t_material;
 
 typedef enum	e_shape_type
 {
@@ -81,7 +77,7 @@ typedef struct	s_shape
 		t_cylinder	cylinder;	//円筒の情報
 	}	u_data;
 
-	t_material	material;		//物体表面の質感
+	t_color3	diffuse_ref;	//拡散反射率(RGB)
 }	t_shape;
 
 typedef struct	s_light
@@ -160,13 +156,11 @@ void	ft_init_scene(char *file, t_scene *scene);
 
 
 
-void  ft_set_color(t_color3 *col, double r, double g, double b);
 int intersection_test(const t_shape *shape, const t_ray* ray, t_intersection_point* out_intp);
 int get_nearest_shape(t_rt *rt, const t_ray *ray, t_shape **out_shape, t_intersection_point *out_intp);
 
 void	ft_raytrace(t_rt *rt);
 void init_shape(t_shape* shape, t_shape_type st, ...);
-void init_material(t_material* mat, double difR, double difG, double difB, double shns);
 void init_light(t_light* light, double vx, double vy, double vz, double spe_r, double illR, double illG, double illB);
 void init_ambient(t_ambient *ambient, double amb_r, double illR, double illG, double illB);
 void  init_camera(t_camera *camera, double vx, double vy, double vz, double nx, double ny, double nz, double fov);

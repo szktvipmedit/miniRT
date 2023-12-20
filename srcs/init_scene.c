@@ -17,58 +17,37 @@ void	ft_init_scene(char *file, t_scene *scene)
 
   init_shape(&scene->shapes[3], ST_SPHERE,
 	     -10.0, 3.0, -3.0, /* 球の中心位置 */
-	      7.0);          /* 球の半径 */
+	      7.0, /* 球の半径 */
+        0.69, 0.69, 0.00);  /* 拡散反射係数(RGB) */
   
   /* 平面の場合：第二引数にST_PLANEを渡す．この場合，追加で6つの実数を渡す． */
 
   init_shape(&scene->shapes[0], ST_PLANE,
 	     0.0, -2.0, 0.0, //平面が通る点の位置
-	     0.0, 1.0, 0.0); //平面の法線ベクトル
+	     0.0, 1.0, 0.0,//平面の法線ベクトル
+       0.69, 0.00, 0.00);  /* 拡散反射係数(RGB) */
 
   init_shape(&scene->shapes[1], ST_PLANE,
 	     0.0, 0.0, 10.0, //平面が通る点の位置
-	     0.0, 0.0, 1.0); //平面の法線ベクトル
+	     0.0, 0.0, 1.0, //平面の法線ベクトル
+       0.00, 0.69, 0.00);  /* 拡散反射係数(RGB) */
 
   // init_shape(&scene->shapes[2], ST_PLANE,
 	//      -100.0, 0.0, 0.0, //平面が通る点の位置
-	//      1.0, 0.0, 0.0); //平面の法線ベクトル
-
-  /* 補足：vector_t構造体に値を設定する場合は以下のように，SET_VECTORマクロを使うことができる． */
-  /* SET_VECTOR(scene->shapes[0].data.sphere.center, 0, 5, 5); */
-
+	//      1.0, 0.0, 0.0,//平面の法線ベクトル
+  //      0.00, 0.00, 0.69);  /* 拡散反射係数(RGB) */
 
   init_shape(&scene->shapes[4], ST_CYLINDER,
 	     -3.0, 15.0, -15.0, //中心位置
 	     5.0, //半径
-       10.0); //高さ
+       10.0,//高さ
+       0.0, 1.0, 0.0, //平面の法線ベクトル
+       0.69, 0.69, 0.00);  /* 拡散反射係数(RGB) */
 
-  
-  /* マテリアルの初期化 ... init_material()関数を使う．*/
-  /* 第一引数は初期化するmaterial_t構造体のポインタ． */
-  init_material(&scene->shapes[0].material,
-		0.69, 0.00, 0.00,  /* 拡散反射係数(RGB) */
-		20.0); /* 光沢度 */
-
-  init_material(&scene->shapes[1].material,
-		0.00, 0.69, 0.00,  /* 拡散反射係数(RGB) */
-		20.0); /* 光沢度 */
-
-  init_material(&scene->shapes[2].material,
-  0.00, 0.00, 0.69,  /* 拡散反射係数(RGB) */
-  20.0); /* 光沢度 */
-
-  init_material(&scene->shapes[3].material,
-  0.69, 0.69, 0.00,  /* 拡散反射係数(RGB) */
-  20.0); /* 光沢度 */
-
-  init_material(&scene->shapes[4].material,
-  0.69, 0.69, 0.00,  /* 拡散反射係数(RGB) */
-  20.0); /* 光沢度 */
   
 
   init_ambient(&scene->ambient, 0.20,/* 環境光係数(RGB)   */
               255, 255, 255); /* 環境光の強さ */
-
 
   init_light(&scene->light, -30.0, 70.0, -50.0, /* 点光源の位置 */
       0.30,/* 鏡面反射率   */

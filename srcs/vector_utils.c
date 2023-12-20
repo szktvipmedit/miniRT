@@ -1,12 +1,5 @@
 #include "../incs/minirt.h"
 
-void  ft_set_color(t_color3 *col, double r, double g, double b)
-{
-    col->r = r;
-    col->g = g;
-    col->b = b;
-}
-
 void ft_convert_color_range(t_color3 *color, int red, int green, int blue)
 {
     color->r = (double)red / 255.0;

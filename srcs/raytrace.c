@@ -9,9 +9,9 @@ void	ft_add_ambient_color(t_scene scene, t_color3 *color)
 
 void	ft_add_diffuse_color(t_scene scene, t_shape *shape, double nl_dot, t_color3 *color)
 {
-	color->r += shape->material.diffuse_ref.r * scene.light.illuminance.r * nl_dot;
-	color->g += shape->material.diffuse_ref.g * scene.light.illuminance.g * nl_dot;
-	color->b += shape->material.diffuse_ref.b * scene.light.illuminance.b * nl_dot;
+	color->r += shape->diffuse_ref.r * scene.light.illuminance.r * nl_dot;
+	color->g += shape->diffuse_ref.g * scene.light.illuminance.g * nl_dot;
+	color->b += shape->diffuse_ref.b * scene.light.illuminance.b * nl_dot;
 }
 
 void	ft_add_specular_color(t_scene scene, double vr_dot_pow, t_color3 *color)
@@ -40,7 +40,7 @@ void	ft_add_light_ref_color(t_rt *rt, t_shape *shape, t_intersection_point intp,
 		inv_eye_dir = v_normalize(inv_eye_dir);
 		vr_dot = dot(&inv_eye_dir, &ref_dir);
 		vr_dot = constrain(vr_dot, 0, 1);
-		vr_dot_pow = pow(vr_dot, shape->material.shininess);
+		vr_dot_pow = pow(vr_dot, SHININESS);
 		ft_add_specular_color(rt->scene, vr_dot_pow, &rt->color);
 	}
 }
@@ -164,13 +164,12 @@ int intersection_test(const t_shape *shape, const t_ray* ray, t_intersection_poi
     else if ( shape->type == ST_CYLINDER )
     {
       const t_cylinder *cylin = &shape->u_data.cylinder;
-      t_vec3 n = v_init(0, 1, 0);
 
       // レイが球に当たったか計算する
-      double a = v_norm(v_cross(ray->direction, n));
+      double a = v_norm(v_cross(ray->direction, cylin->normal));
       a = a * a;
-      double b = 2 * v_dot(v_cross(ray->direction, n), v_cross(v_sub(ray->start, cylin->position), n));
-      double c = v_norm(v_cross(v_sub(ray->start, cylin->position), n));
+      double b = 2 * v_dot(v_cross(ray->direction, cylin->normal), v_cross(v_sub(ray->start, cylin->position), cylin->normal));
+      double c = v_norm(v_cross(v_sub(ray->start, cylin->position), cylin->normal));
       c = c * c - cylin->radius * cylin->radius;
       // 判別式
       double d = b * b - 4 * a * c;
@@ -192,12 +191,12 @@ int intersection_test(const t_shape *shape, const t_ray* ray, t_intersection_poi
       t_vec3 center2p_inner = v_sub(p_inner, cylin->position);
 
       // 底面から交点までの高さ
-      double height_outer = v_dot(center2p_outer, n);
-      double height_inner = v_dot(center2p_inner, n);
+      double height_outer = v_dot(center2p_outer, cylin->normal);
+      double height_inner = v_dot(center2p_inner, cylin->normal);
 
       if (height_outer >= 0 && height_outer <= cylin->height)
       {
-        out_intp->normal = v_sub(center2p_outer, v_mult(n, height_outer));
+        out_intp->normal = v_sub(center2p_outer, v_mult(cylin->normal, height_outer));
         out_intp->normal = v_normalize(out_intp->normal);
         out_intp->distance = t_outer;
         out_intp->position = p_outer;
@@ -206,7 +205,7 @@ int intersection_test(const t_shape *shape, const t_ray* ray, t_intersection_poi
       }
       else if (height_inner >= 0 && height_inner <= cylin->height)
       {
-        out_intp->normal = v_sub(v_mult(n, height_inner), center2p_inner);
+        out_intp->normal = v_sub(v_mult(cylin->normal, height_inner), center2p_inner);
         out_intp->normal = v_normalize(out_intp->normal);
         out_intp->distance = t_inner;
         out_intp->position = p_inner;
@@ -270,6 +269,9 @@ void init_shape(t_shape* shape, t_shape_type st, ...)
       sph->center.y = va_arg(args, double);
       sph->center.z = va_arg(args, double);
       sph->radius   = va_arg(args, double);
+      shape->diffuse_ref.r = va_arg(args, double);
+      shape->diffuse_ref.g = va_arg(args, double);
+      shape->diffuse_ref.b = va_arg(args, double);
     }
   else if ( st == ST_PLANE )
     {
@@ -278,10 +280,12 @@ void init_shape(t_shape* shape, t_shape_type st, ...)
       plane->position.x = va_arg(args, double);
       plane->position.y = va_arg(args, double);
       plane->position.z = va_arg(args, double);
-
       plane->normal.x = va_arg(args, double);
       plane->normal.y = va_arg(args, double);
       plane->normal.z = va_arg(args, double);
+      shape->diffuse_ref.r = va_arg(args, double);
+      shape->diffuse_ref.g = va_arg(args, double);
+      shape->diffuse_ref.b = va_arg(args, double);
     }
     else if (st == ST_CYLINDER)
     {
@@ -292,6 +296,12 @@ void init_shape(t_shape* shape, t_shape_type st, ...)
       cylin->position.z = va_arg(args, double);
       cylin->radius     = va_arg(args, double);
       cylin->height     = va_arg(args, double);
+      cylin->normal.x = va_arg(args, double);
+      cylin->normal.y = va_arg(args, double);
+      cylin->normal.z = va_arg(args, double);
+      shape->diffuse_ref.r = va_arg(args, double);
+      shape->diffuse_ref.g = va_arg(args, double);
+      shape->diffuse_ref.b = va_arg(args, double);
     }
   else
     {
@@ -306,17 +316,6 @@ void init_shape(t_shape* shape, t_shape_type st, ...)
 
 
 
-
-
-
-
-void init_material(t_material* mat,
-		   double difR, double difG, double difB,
-		   double shns)
-{
-  ft_set_color(&mat->diffuse_ref,  difR, difG, difB);
-  mat->shininess = shns;
-}
 
 void init_light(t_light* light, double vx, double vy, double vz, double spe_r, double illR, double illG, double illB)
 {
