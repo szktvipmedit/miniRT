@@ -27,15 +27,22 @@ int	main(int argc, char **argv)
 {
 	t_rt	rt;
 
-	(void)argc;
-	// if (argc != 2)
-	// 	exit(1);	//error_message
-	rt = (t_rt){0};
-	ft_init_scene(argv[1], &rt.scene);//ここで.rtファイルの読み込み、エラーハンドリング
-	ft_init_rt(&rt);
-	ft_rendering(&rt);
-	mlx_hook(rt.win_ptr, 2, 0, ft_deal_key, &rt);
-	mlx_hook(rt.win_ptr, 17, 0, ft_clean_up_and_exit, &rt);
-	mlx_loop(rt.mlx_ptr);
-	exit(0);
+	if(argc == 2)
+    {
+		rt = (t_rt){0};
+		ft_init_scene(argv[1], &rt.scene);//ここで.rtファイルの読み込み、エラーハンドリング
+		ft_init_rt(&rt);
+		//値が格納されているか確認
+		// printf("%f \n", rt.scene.shapes[3].diffuse_ref.r);
+		// printf("%f \n", rt.scene.shapes[3].u_data.plane.normal.z);
+		// printf("%f \n", rt.scene.ambient.ambient_ref);
+		// printf("%f \n", rt.scene.camera.degree);
+		ft_rendering(&rt);
+		mlx_hook(rt.win_ptr, 2, 0, ft_deal_key, &rt);
+		mlx_hook(rt.win_ptr, 17, 0, ft_clean_up_and_exit, &rt);
+		mlx_loop(rt.mlx_ptr);
+		exit(0);
+	}
+    else
+        error_exit(ERROR_ARG_CNT);
 }

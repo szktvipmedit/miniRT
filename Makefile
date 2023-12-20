@@ -12,7 +12,15 @@ FILES				= minirt.c \
 							intersection_test_utils.c \
 							vec3_utils_1.c \
 							vec3_utils_2.c \
-							vec3_utils_3.c
+							vec3_utils_3.c \
+							check_utils.c \
+							count_num_shapes.c \
+							read_each_objects.c \
+							read_each_objects2.c \
+							read_info.c \
+							store_values.c \
+							utils.c \
+							utils2.c \
 
 SRCS				= $(addprefix $(SRCS_DIR), $(FILES))
 OBJS				= $(SRCS:$(SRCS_DIR)%.c=$(OBJS_DIR)%.o)

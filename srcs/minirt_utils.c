@@ -11,3 +11,8 @@ int	ft_clean_up_and_exit(t_rt *rt)//ここにfree処理なども追加
 	exit(1);
 	return (0);// mlx_hookの引数に渡すためにint型にしてある
 }
+void error_exit(char *error_message)
+{
+	write(2, error_message, ft_strlen(error_message));
+	exit(1);
+}

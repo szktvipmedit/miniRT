@@ -5,6 +5,7 @@
 # include "../mlx/mlx.h"
 # include <math.h>
 # include <float.h>
+# include <fcntl.h>
 
 # define HEIGHT 512
 # define WIDTH 512
@@ -14,6 +15,12 @@
 # define SHININESS 20.0//光沢度
 # define EPSILON (1.0/512)
 # define SHADOW -1
+
+# define ERROR_MALLOC "Error: malloc failed!\n"
+# define ERROR_ARG_CNT "Error: The number of arguments is different\n"
+# define ERROR_OPEN "Error: open failed!\n"
+# define ERROR_EMPTY_FILE "Error: The file passed is empty!\n"
+# define ERROR_USAGE "Error: Usage: ./miniRT {~~.rt}\n"
 
 typedef struct	s_vec3
 {
@@ -198,5 +205,37 @@ double	v_dot(t_vec3 a, t_vec3 b);
 t_vec3	v_cross(t_vec3 a, t_vec3 b);
 double	v_norm(t_vec3 v);
 t_vec3	v_normalize(t_vec3 v);
+
+void				error_exit(char *error_message);
+int					ft_syntax_check_double_value(char *str);
+void				ft_split_array_all_free(char **str);
+int					ft_isverify_file_extension(char *filename, char *extension);
+
+size_t				count_info_in_line(char **info);
+void				check_info_count(char **info, size_t need_info_count,
+						size_t line_num);
+double				check_range_value(double val, double range_min,
+						double range_max, size_t line_num);
+double				create_double_value(char *str, size_t line_num);
+
+void				store_normalized_values(t_vec3 *vec, char *info, size_t line_num);
+void				store_coordinate_values(t_vec3 *vec, char *info, size_t line_num);
+void				store_rgb_values(t_color3 *col, char *info, size_t line_num);
+
+void				read_light_info(t_scene *scene, char **info,
+						size_t line_num);
+void				read_camera_info(t_scene *scene, char **info,
+						size_t line_num);
+void				read_ambient_light_info(t_scene *scene, char **info,
+						size_t line_num);
+void				read_sphere_info(t_scene *scene, char **info,
+						size_t line_num);
+void				read_plane_info(t_scene *scene, char **info,
+						size_t line_num);
+void				read_cylinder_info(t_scene *scene, char **info,
+						size_t line_num);
+size_t	count_num_shapes(char *file);
+void	read_info(t_scene *scene, char *filename);
+double ft_atod(char *str);
 
 #endif
