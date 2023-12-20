@@ -1,13 +1,7 @@
 #include "../incs/minirt.h"
 
-void	error_malloc(void)
+void error_exit(char *error_message)
 {
-	write(2, ERROR_MALLOC, ft_strlen(ERROR_MALLOC));
+	write(2, error_message, ft_strlen(error_message));
 	exit(1);
-}
-
-void    error_arg_cnt(void)
-{
-    write(2, ERROR_ARG_CNT, ft_strlen(ERROR_ARG_CNT));
-    exit(1);
 }

@@ -112,4 +112,8 @@ void				ft_puthex_count_stderr(unsigned int u, int *count, char c);
 void				ft_putchar_count_stderr(int c, int *count);
 void				ft_putstr_count_stderr(char *s, int *count);
 
+
+void ft_split_array_all_free(char **str);
+int ft_syntax_check_int_value(char *str);
+int ft_syntax_check_double_value(char *str);
 #endif

@@ -22,7 +22,10 @@
 
 //error messages---------------
 #define ERROR_MALLOC "Error: malloc failed!\n"
-#define ERROR_ARG_CNT "The number of arguments is different\n"
+#define ERROR_ARG_CNT "Error: The number of arguments is different\n"
+#define ERROR_OPEN "Error: open failed!\n"
+#define ERROR_EMPTY_FILE "Error: The file passed is empty!\n"
+#define ERROR_USAGE "Error: Usage: ./miniRT {~~.rt}\n"
 
 //structs-----------------------
 typedef struct s_rt
@@ -42,12 +45,13 @@ typedef struct s_rt
 void draw(t_rt  *rt_info);
 
 //error_messages.c
-void	error_malloc(void);
+void    error_exit(char *error_message);
 
 //init_rt_info.c
 void	image_init(t_rt *rt_info);
 void    rt_info_init(t_rt *rt_info);
 
 
+void	read_info(t_rt *rt_info, char *filename);
 
 #endif

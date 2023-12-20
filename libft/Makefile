@@ -56,7 +56,10 @@ SRCS				= ft_isalpha.c \
 							get_next_line_utils_bonus.c \
 							ft_printf_stderr.c \
 							ft_numbers_func_stderr.c \
-							ft_words_func_stderr.c
+							ft_words_func_stderr.c \
+							ft_split_array_all_free.c \
+							ft_syntax_check_double_value.c \
+							ft_syntax_check_int_value.c \
 
 SRCS_BONUS	= ft_lstnew.c \
 							ft_lstadd_front.c \

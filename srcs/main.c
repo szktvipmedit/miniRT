@@ -39,5 +39,5 @@ int main(int argc, char **argv)
         mlx_loop(rt_info->mlx_ptr);
     }
     else
-        arg_cnt_error();
+        error_exit(ERROR_ARG_CNT);
 }
