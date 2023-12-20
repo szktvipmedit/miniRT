@@ -2,10 +2,15 @@ SRCS = srcs/main.c \
 	   srcs/init_rt_info.c \
 	   srcs/create_image.c \
 	   srcs/create_image2.c \
+	   srcs/raytracing/raytracing.c \
+	   srcs/raytracing/get_nearest_shape.c \
+	   srcs/raytracing/intersection_sphere.c \
+	   srcs/raytracing/intersection_plane.c \
+	   srcs/raytracing/radience.c \
 	   srcs/error_messages.c \
-	   srcs/raytracing.c \
 	   srcs/scene_setting1.c \
-	   srcs/vector_utils.c \
+	   srcs/utils/vector_utils.c \
+	   srcs/utils/color_utils.c \
 	   
 
 OBJS = ${patsubst $(SRCS_DIR)%.c,  $(OBJS_DIR)%.o, $(SRCS)}

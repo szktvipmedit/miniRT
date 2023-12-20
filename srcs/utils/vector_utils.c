@@ -1,8 +1,14 @@
-#include "../incs/vector_utils.h"
+#include "../../incs/vector_utils.h"
 
 #include <stdio.h>
 #include <math.h>
 #include <string.h>
+void	set_vector(vector_t *vec, float x, float y, float z)
+{
+	vec->x = x;
+	vec->y = y;
+	vec->z = z;
+}
 
 vector_t init_vector(double x, double y, double z)
 {

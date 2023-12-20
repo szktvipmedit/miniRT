@@ -108,12 +108,26 @@ typedef struct
       colorf_t sep_rd; /* 直接光の鏡面反射輝度 */;
       colorf_t ref_rd; /* 完全反射輝度 */;
 }     t_pixel_info;
+
+typedef struct
+{
+  vector_t pe_pc;
+  float A,B,C,D;
+  float t;
+} t_quad_func_info;
+
 int intersection_test(const shape_t *shape, const ray_t* ray, intersection_point_t* out_intp);
+int intersection_test_case_shpere(intersection_point_t *out_intp, const shape_t *shape, const ray_t *ray);
+int intersection_test_case_plane(intersection_point_t *out_intp, const shape_t *shape, const ray_t *ray);
 int get_nearest_shape(const scene_t* scene, const ray_t *ray, float max_dist, int exit_once_found,
                       shape_t **out_shape, intersection_point_t *out_intp);
+int store_out_variable(shape_t *nearest_shape, intersection_point_t nearest_intp, shape_t **out_shape,intersection_point_t *out_intp);
 #define MAX_RECURSION 8
+#define EPSILON 1.0 / 512
 int recursive_raytrace(const scene_t* scene, const ray_t *eye_ray, colorf_t *out_col, int recursion_level);
 int raytrace(const scene_t* scene, const ray_t *eye_ray, colorf_t *out_col);
+void	calc_radience(const scene_t *scene, t_pixel_info *pixel_info,
+		const ray_t *eye_ray, float dist_intp_light);
 
 void scene_setting(scene_t *scene);
 void init_shape(shape_t* shape, shape_type st, ...);
@@ -126,5 +140,7 @@ void init_material(material_t* mat,
 void init_light(light_t* light, light_type lt,
 		float vx, float vy, float vz,
 		float illR, float illG, float illB);
+void	set_color(colorf_t *col, float r, float g, float b);
+void	init_color(t_pixel_info *pixel_info);
 
 #endif
