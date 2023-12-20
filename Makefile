@@ -5,10 +5,14 @@ MLX_FLAGS		= -L mlx -lmlx -framework OpenGL -framework AppKit
 
 FILES				= minirt.c \
 							minirt_utils.c \
+							init_scene.c \
 							rendering.c \
 							raytrace.c \
-							init_scene.c \
-							vector_utils.c
+							get_nearest_shape.c \
+							intersection_test_utils.c \
+							vec3_utils_1.c \
+							vec3_utils_2.c \
+							vec3_utils_3.c
 
 SRCS				= $(addprefix $(SRCS_DIR), $(FILES))
 OBJS				= $(SRCS:$(SRCS_DIR)%.c=$(OBJS_DIR)%.o)

@@ -1,9 +1,19 @@
 #include "../incs/minirt.h"
 
-void	ft_set_basis_vectors(t_ray *ray, t_camera camera)
+static t_color3	ft_init_color3(double r, double g, double b)
+{
+	t_color3	new;
+
+	new.r = r;
+	new.g = g;
+	new.b = b;
+	return (new);
+}
+
+static void	ft_set_basis_vectors(t_ray *ray, t_camera camera)
 {
 	t_vec3 up_dir;
-	
+
 	up_dir = v_init(0, 1, 0);	//上方向
 	ray->x_dir = v_cross(up_dir, camera.forward_dir);
 	ray->y_dir = v_cross(camera.forward_dir, ray->x_dir);	//外積は引数の順番大事
@@ -23,7 +33,7 @@ void	ft_set_basis_vectors(t_ray *ray, t_camera camera)
 	}
 }
 
-void	ft_set_eye_ray(t_ray *ray, t_camera camera, int x, int y)
+static void	ft_set_eye_ray(t_ray *ray, t_camera camera, int x, int y)
 {
 	double	dwidth;
 	double	dheight;
@@ -41,12 +51,12 @@ void	ft_set_eye_ray(t_ray *ray, t_camera camera, int x, int y)
 	dx = (dwidth * x)/(WIDTH - 1) - dwidth / 2;
 	dy = (-dheight * y)/(HEIGHT - 1) + dheight / 2;
 	screen_distance = WIDTH / 2 / tan(camera.degree / 2 * M_PI / 180);
-	t_vec3 pw = v_add(v_add(camera.camera_position, v_mult(camera.forward_dir, screen_distance)), v_add(v_mult(ray->x_dir, dx), v_mult(ray->y_dir, dy)));
+	ray->pw = v_add(v_add(camera.camera_position, v_mult(camera.forward_dir, screen_distance)), v_add(v_mult(ray->x_dir, dx), v_mult(ray->y_dir, dy)));
 	ray->start = camera.camera_position;
-	ray->direction = v_sub(pw, camera.camera_position);
+	ray->direction = v_sub(ray->pw, camera.camera_position);
 }
 
-void	ft_set_color_of_pixel(t_rt *rt, int x, int y)
+static void	ft_set_color_of_pixel(t_rt *rt, int x, int y)
 {
 	unsigned char	r;
 	unsigned char	g;
@@ -73,7 +83,7 @@ void ft_rendering(t_rt *rt)
 		x = 0;
 		while (x < WIDTH)
 		{
-			rt->color = ft_init_color3(0.0, 0.0, 0.0);	//黒で初期化
+			rt->color = ft_init_color3(0.0, 0.0, 0.0);//黒で初期化
 			ft_set_eye_ray(&rt->ray, rt->scene.camera, x, y);
 			ft_raytrace(rt);
 			ft_set_color_of_pixel(rt, x, y);

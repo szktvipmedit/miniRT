@@ -37,6 +37,7 @@ typedef struct	s_ray
 	//上記２つを求めるために必要。norm制限のためここで宣言
 	t_vec3	x_dir;			//基底ベクトルx
 	t_vec3	y_dir;			//基底ベクトルy
+	t_vec3	pw;
 }	t_ray;
 
 typedef struct	s_sphere
@@ -89,8 +90,8 @@ typedef struct	s_light
 
 typedef struct	s_ambient
 {
-	double		ambient_ref;					//環境光反射率
-	t_color3	ambient_illuminance;	//環境光の強さ(RGB)
+	double		ambient_ref;			//環境光反射率
+	t_color3	amb_illuminance;	//環境光の強さ(RGB)
 }	t_ambient;
 
 typedef struct	s_camera
@@ -142,45 +143,60 @@ typedef struct	s_rt
 
 } t_rt;
 
+typedef struct	s_cy//normの変数制限のため、ft_test_cylinder内のみで使用する構造体
+{
+	double	a;
+	double	b;
+	double	c;
+	double	d;
+	double	t_outer;
+	double	t_inner;
+	t_vec3	p_outer;
+	t_vec3	p_inner;
+	t_vec3	center2p_outer;
+	t_vec3	center2p_inner;
+	double	height_outer;
+	double	height_inner;
+}	t_cy;
 
 // minirt_utils.c
 int	ft_clean_up_and_exit(t_rt *rt);
 
-// rendering.c
-void ft_rendering(t_rt *rt);
-double dot(const t_vec3* a, const t_vec3* b);
-
 // init_scene.c
 void	ft_init_scene(char *file, t_scene *scene);
 
+// rendering.c
+void ft_rendering(t_rt *rt);
 
-
-
-int intersection_test(const t_shape *shape, const t_ray* ray, t_intersection_point* out_intp);
-int get_nearest_shape(t_rt *rt, const t_ray *ray, t_shape **out_shape, t_intersection_point *out_intp);
-
+// raytrace.c
 void	ft_raytrace(t_rt *rt);
-void init_shape(t_shape* shape, t_shape_type st, ...);
-void init_light(t_light* light, double vx, double vy, double vz, double spe_r, double illR, double illG, double illB);
-void init_ambient(t_ambient *ambient, double amb_r, double illR, double illG, double illB);
-void  init_camera(t_camera *camera, double vx, double vy, double vz, double nx, double ny, double nz, double fov);
 
-double v_norm(t_vec3 v);
-t_vec3 v_normalize(t_vec3 v);
+// get_nearest_shape.c
+int	ft_get_nearest_shape(t_rt *rt, t_ray *ray, t_shape **out_shape, t_intersection_point *out_intp);
 
-void ft_convert_color_range(t_color3 *color, int red, int green, int blue);
-double square(double x);
-double min(double a, double b);
-double max(double a, double b);
-double constrain(double v, double vmin, double vmax);
+// intersection_test_utils.c
+void	ft_calculate_sphere_t(t_sphere *sph, t_ray *ray, t_vec3 pe_pc, double *t);
+int		ft_test_sphere(t_shape *shape, t_ray* ray, t_intersection_point* out_intp);
+int		ft_test_plane(t_shape *shape, t_ray* ray, t_intersection_point* out_intp);
+int		ft_set_cy_info(t_cy *cy, t_cylinder	*cylin, t_ray* ray);
+int		ft_test_cylinder(t_shape *shape, t_ray* ray, t_intersection_point* out_intp);
 
-t_color3	ft_init_color3(double r, double g, double b);
+// vec3_utils_1.c
+double	square(double x);
+double	min(double a, double b);
+double	max(double a, double b);
+double	constrain(double v, double vmin, double vmax);
 
+// vec3_utils_2.c
 t_vec3	v_init(double x, double y, double z);
 t_vec3	v_add(t_vec3 a, t_vec3 b);
 t_vec3	v_sub(t_vec3 a, t_vec3 b);
 t_vec3	v_mult(t_vec3 a, double b);
-t_vec3	v_cross(t_vec3 a, t_vec3 b);
+
+// vec3_utils_3.c
 double	v_dot(t_vec3 a, t_vec3 b);
+t_vec3	v_cross(t_vec3 a, t_vec3 b);
+double	v_norm(t_vec3 v);
+t_vec3	v_normalize(t_vec3 v);
 
 #endif
