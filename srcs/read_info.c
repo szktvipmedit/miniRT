@@ -12,7 +12,7 @@ int is_all_spaces(char *str)
 void	read_info(t_scene *scene, char *filename)
 {
 	int fd;
-	size_t line_num;
+	int line_num;
 	char *line;
 	size_t store_shape_num;
 	store_shape_num = 0;
@@ -58,7 +58,10 @@ void	read_info(t_scene *scene, char *filename)
 				(int)line_num);
         free(line);
         ft_split_array_all_free(info);
-        line = get_next_line(fd);
+		if(line_num < INT_MAX)
+            line = get_next_line(fd);
+        else
+            break;
 		line_num++;
 	}
     close(fd);

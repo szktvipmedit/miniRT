@@ -1,9 +1,9 @@
 #include "../incs/minirt.h"
 
-size_t	count_num_shapes(char *filename)
+int	count_num_shapes(char *filename)
 {
 	int fd;
-	size_t line_num;
+	int line_num;
 	char *line;
     if(!ft_isverify_file_extension(filename, ".rt"))
         error_exit(ERROR_USAGE);
@@ -25,9 +25,14 @@ size_t	count_num_shapes(char *filename)
             line_num++;
         free(line);
         ft_split_array_all_free(info);
-        line = get_next_line(fd);
+        if(line_num < INT_MAX)
+            line = get_next_line(fd);
+        else
+        {
+            ft_printf_stderr("The maximum number of objects is INT_MAX\n");
+            break;
+        }
 	}
-    line = 0;
     close(fd);
     return line_num;
 }

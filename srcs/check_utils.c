@@ -9,31 +9,31 @@ size_t count_info_in_line(char **info)
     return len;
 }
 
-void check_info_count(char **info, size_t need_info_count, size_t line_num)
+void check_info_count(char **info, size_t need_info_count, int line_num)
 {
     if(count_info_in_line(info) != need_info_count)
     {
-        printf("Error :.rt : line %zu: Check how much information this object requires", line_num);
+        printf("Error :.rt : line %i: Check how much information this object requires", line_num);
         exit(1);
     }
 }
 
-double check_range_value(double val, double range_min, double range_max, size_t line_num)
+double check_range_value(double val, double range_min, double range_max, int line_num)
 {
     if(!(range_min <= val && val <= range_max))
     {
-        ft_printf_stderr("Error :.rt : line %zu: Check the range of specified values", line_num);
+        ft_printf_stderr("Error :.rt : line %i: Check the range of specified values", line_num);
         exit(1);
     }
     return val;
 }
 
-double create_double_value(char *str, size_t line_num)
+double create_double_value(char *str, int line_num)
 {
     double val;
     if(ft_syntax_check_double_value(str))
     {
-        ft_printf_stderr("Error :.rt : line %i: %s is invalid value. ",(int)line_num, str);
+        ft_printf_stderr("Error :.rt : line %i: %s is invalid value. ",line_num, str);
         exit(1);
     }
     val = ft_atod(str);

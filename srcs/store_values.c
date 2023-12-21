@@ -1,6 +1,6 @@
 #include "../incs/minirt.h"
 
-void store_rgb_values(t_color3 *col, char *info, size_t line_num)
+void store_rgb_values(t_color3 *col, char *info, int line_num)
 {
     char **rgb;
     rgb = ft_split(info, ',');
@@ -13,7 +13,7 @@ void store_rgb_values(t_color3 *col, char *info, size_t line_num)
     ft_split_array_all_free(rgb);
 }
 
-void store_coordinate_values(t_vec3 *vec, char *info, size_t line_num)
+void store_coordinate_values(t_vec3 *vec, char *info, int line_num)
 {
     char **xyz;
     xyz = ft_split(info, ',');
@@ -26,7 +26,7 @@ void store_coordinate_values(t_vec3 *vec, char *info, size_t line_num)
     ft_split_array_all_free(xyz);
 }
 
-void store_normalized_values(t_vec3 *vec, char *info, size_t line_num)
+void store_normalized_values(t_vec3 *vec, char *info, int line_num)
 {
     char **xyz;
     xyz = ft_split(info, ',');

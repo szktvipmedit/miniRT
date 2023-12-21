@@ -213,28 +213,28 @@ int					ft_isverify_file_extension(char *filename, char *extension);
 
 size_t				count_info_in_line(char **info);
 void				check_info_count(char **info, size_t need_info_count,
-						size_t line_num);
+						int line_num);
 double				check_range_value(double val, double range_min,
-						double range_max, size_t line_num);
-double				create_double_value(char *str, size_t line_num);
+						double range_max, int line_num);
+double				create_double_value(char *str, int line_num);
 
-void				store_normalized_values(t_vec3 *vec, char *info, size_t line_num);
-void				store_coordinate_values(t_vec3 *vec, char *info, size_t line_num);
-void				store_rgb_values(t_color3 *col, char *info, size_t line_num);
+void				store_normalized_values(t_vec3 *vec, char *info, int line_num);
+void				store_coordinate_values(t_vec3 *vec, char *info, int line_num);
+void				store_rgb_values(t_color3 *col, char *info, int line_num);
 
 void				read_light_info(t_scene *scene, char **info,
-						size_t line_num);
+						int line_num);
 void				read_camera_info(t_scene *scene, char **info,
-						size_t line_num);
+						int line_num);
 void				read_ambient_light_info(t_scene *scene, char **info,
-						size_t line_num);
+						int line_num);
 void				read_sphere_info(t_scene *scene, char **info,
-						size_t line_num, size_t *store_size_num);
+						int line_num, size_t *store_size_num);
 void				read_plane_info(t_scene *scene, char **info,
-						size_t line_num, size_t *store_size_num);
+						int line_num, size_t *store_size_num);
 void				read_cylinder_info(t_scene *scene, char **info,
-						size_t line_num, size_t *store_size_num);
-size_t	count_num_shapes(char *file);
+						int line_num, size_t *store_size_num);
+int	count_num_shapes(char *file);
 void	read_info(t_scene *scene, char *filename);
 double ft_atod(char *str);
 void normalize_color(t_color3 *col);

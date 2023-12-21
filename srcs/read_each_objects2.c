@@ -10,7 +10,7 @@ void normalize_color(t_color3 *col)
         col->b = col->b/255.0;
 }
 
-void read_sphere_info(t_scene *scene, char **info, size_t line_num, size_t *store_shape_num)
+void read_sphere_info(t_scene *scene, char **info, int line_num, size_t *store_shape_num)
 {
     t_sphere *sph;
     scene->shapes[(*store_shape_num)].type = ST_SPHERE;
@@ -23,7 +23,7 @@ void read_sphere_info(t_scene *scene, char **info, size_t line_num, size_t *stor
     (*store_shape_num)++;
 }
 
-void read_plane_info(t_scene *scene, char **info, size_t line_num, size_t *store_shape_num)
+void read_plane_info(t_scene *scene, char **info, int line_num, size_t *store_shape_num)
 {
     t_plane *pln;
     scene->shapes[(*store_shape_num)].type = ST_PLANE;
@@ -35,7 +35,7 @@ void read_plane_info(t_scene *scene, char **info, size_t line_num, size_t *store
     normalize_color(&scene->shapes[*store_shape_num].diffuse_ref);
     (*store_shape_num)++;
 }
-void read_cylinder_info(t_scene *scene, char **info, size_t line_num, size_t *store_shape_num)
+void read_cylinder_info(t_scene *scene, char **info, int line_num, size_t *store_shape_num)
 {
     t_cylinder *cylin;
     scene->shapes[(*store_shape_num)].type = ST_CYLINDER;

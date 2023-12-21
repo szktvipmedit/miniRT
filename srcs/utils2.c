@@ -47,8 +47,6 @@ int	ft_isverify_file_extension(char *filename, char *extension)
 	size_t	dot_i;
 	size_t	len;
 
-	if (!filename || !extension || ft_strlen(filename) == 1)
-    	error_exit("Error: ft_isverify_file_extension()\n");
 	i = 0;
 	len = ft_strlen(filename);
 	dot_i = len - 1;
