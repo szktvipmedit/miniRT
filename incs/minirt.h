@@ -229,11 +229,11 @@ void				read_camera_info(t_scene *scene, char **info,
 void				read_ambient_light_info(t_scene *scene, char **info,
 						size_t line_num);
 void				read_sphere_info(t_scene *scene, char **info,
-						size_t line_num);
+						size_t line_num, size_t *store_size_num);
 void				read_plane_info(t_scene *scene, char **info,
-						size_t line_num);
+						size_t line_num, size_t *store_size_num);
 void				read_cylinder_info(t_scene *scene, char **info,
-						size_t line_num);
+						size_t line_num, size_t *store_size_num);
 size_t	count_num_shapes(char *file);
 void	read_info(t_scene *scene, char *filename);
 double ft_atod(char *str);

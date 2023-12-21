@@ -11,7 +11,6 @@ void store_rgb_values(t_color3 *col, char *info, size_t line_num)
     col->g = check_range_value(create_double_value(rgb[1], line_num), 0.0, 255.0, line_num);
     col->b = check_range_value(create_double_value(rgb[2], line_num), 0.0, 255.0, line_num);
     ft_split_array_all_free(rgb);
-    
 }
 
 void store_coordinate_values(t_vec3 *vec, char *info, size_t line_num)

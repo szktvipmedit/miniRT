@@ -33,8 +33,10 @@ int	main(int argc, char **argv)
 		ft_init_scene(argv[1], &rt.scene);//ここで.rtファイルの読み込み、エラーハンドリング
 		ft_init_rt(&rt);
 		//値が格納されているか確認
-		// printf("%f \n", rt.scene.shapes[3].diffuse_ref.r);
-		// printf("%f \n", rt.scene.shapes[3].u_data.plane.normal.z);
+		// printf("%f \n", rt.scene.shapes[0].diffuse_ref.r);
+		// printf("%f \n", rt.scene.shapes[0].u_data.plane.normal.x);
+		// printf("%f \n", rt.scene.shapes[0].u_data.plane.normal.y);
+		// printf("%f \n", rt.scene.shapes[0].u_data.plane.normal.z);
 		// printf("%f \n", rt.scene.ambient.ambient_ref);
 		// printf("%f \n", rt.scene.camera.degree);
 		ft_rendering(&rt);

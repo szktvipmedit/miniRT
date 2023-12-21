@@ -22,10 +22,7 @@ size_t	count_num_shapes(char *filename)
         info = ft_split(line, ' ');
         if(!info)
             error_exit(ERROR_MALLOC);
-		if (!ft_strncmp(info[0], "A", 2) || 
-            !ft_strncmp(info[0], "C", 2) || 
-            !ft_strncmp(info[0], "L", 2) ||
-            !ft_strncmp(info[0], "sp", 3) ||
+		if (!ft_strncmp(info[0], "sp", 3) ||
             !ft_strncmp(info[0], "pl", 3) ||!ft_strncmp(info[0], "cy ", 3))
             line_num++;
         free(line);

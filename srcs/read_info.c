@@ -5,6 +5,8 @@ void	read_info(t_scene *scene, char *filename)
 	int fd;
 	size_t line_num;
 	char *line;
+	size_t store_shape_num;
+	store_shape_num = 0;
     if(!ft_isverify_file_extension(filename, ".rt"))
         error_exit(ERROR_USAGE);
 	fd = open(filename, O_RDONLY);
@@ -31,11 +33,11 @@ void	read_info(t_scene *scene, char *filename)
 		else if (!ft_strncmp(info[0], "L", 2))
 			read_light_info(scene, info, line_num);
 		else if (!ft_strncmp(info[0], "sp", 3))
-			read_sphere_info(scene, info, line_num);
+			read_sphere_info(scene, info, line_num, &store_shape_num);
 		else if (!ft_strncmp(info[0], "pl", 3))
-			read_plane_info(scene, info, line_num);
+			read_plane_info(scene, info, line_num, &store_shape_num);
 		else if (!ft_strncmp(info[0], "cy", 3))
-			read_cylinder_info(scene, info, line_num);
+			read_cylinder_info(scene, info, line_num, &store_shape_num);
 		else
 			ft_printf_stderr("Error :.rt : line %i: invalid identifier\n", 
 				(int)line_num);
