@@ -6,6 +6,7 @@
 # include <math.h>
 # include <float.h>
 # include <fcntl.h>
+# include <limits.h>
 
 # define HEIGHT 512
 # define WIDTH 512
@@ -21,6 +22,7 @@
 # define ERROR_OPEN "Error: open failed!\n"
 # define ERROR_EMPTY_FILE "Error: The file passed is empty!\n"
 # define ERROR_USAGE "Error: Usage: ./miniRT {~~.rt}\n"
+# define NOTICE_MAX_OBJECTS "The maximum number of objects is INT_MAX\n"
 
 typedef struct	s_vec3
 {
@@ -209,7 +211,7 @@ t_vec3	v_normalize(t_vec3 v);
 void				error_exit(char *error_message);
 int					ft_syntax_check_double_value(char *str);
 void				ft_split_array_all_free(char **str);
-int					ft_isverify_file_extension(char *filename, char *extension);
+int					ft_verify_file_extension(char *filename, char *extension);
 
 size_t				count_info_in_line(char **info);
 void				check_info_count(char **info, size_t need_info_count,

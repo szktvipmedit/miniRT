@@ -41,7 +41,7 @@ double ft_atod(char *str)
     return minus_flag * (integer + (decimal / pow(10, deci_len)));
 }
 
-int	ft_isverify_file_extension(char *filename, char *extension)
+int	ft_verify_file_extension(char *filename, char *extension)
 {
 	size_t	i;
 	size_t	dot_i;

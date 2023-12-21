@@ -22,10 +22,10 @@ static int	ft_deal_key(int key_code, t_rt *rt)
 		ft_clean_up_and_exit(rt);
 	return (0);
 }
-__attribute__((destructor))
-static void destructor() {
-    system("leaks -q miniRT");
-}
+// __attribute__((destructor))
+// static void destructor() {
+//     system("leaks -q miniRT");
+// }
 
 int	main(int argc, char **argv)
 {
@@ -34,15 +34,8 @@ int	main(int argc, char **argv)
 	if(argc == 2)
     {
 		rt = (t_rt){0};
-		ft_init_scene(argv[1], &rt.scene);//ここで.rtファイルの読み込み、エラーハンドリング
+		ft_init_scene(argv[1], &rt.scene);
 		ft_init_rt(&rt);
-		//値が格納されているか確認
-		// printf("%f \n", rt.scene.shapes[0].diffuse_ref.r);
-		// printf("%f \n", rt.scene.shapes[0].u_data.plane.normal.x);
-		// printf("%f \n", rt.scene.shapes[0].u_data.plane.normal.y);
-		// printf("%f \n", rt.scene.shapes[0].u_data.plane.normal.z);
-		// printf("%f \n", rt.scene.ambient.ambient_ref);
-		// printf("%f \n", rt.scene.camera.degree);
 		ft_rendering(&rt);
 		mlx_hook(rt.win_ptr, 2, 0, ft_deal_key, &rt);
 		mlx_hook(rt.win_ptr, 17, 0, ft_clean_up_and_exit, &rt);

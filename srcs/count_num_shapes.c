@@ -5,7 +5,7 @@ int	count_num_shapes(char *filename)
 	int fd;
 	int line_num;
 	char *line;
-    if(!ft_isverify_file_extension(filename, ".rt"))
+    if(!ft_verify_file_extension(filename, ".rt"))
         error_exit(ERROR_USAGE);
 	fd = open(filename, O_RDONLY);
 	if (fd < 0)
@@ -29,7 +29,7 @@ int	count_num_shapes(char *filename)
             line = get_next_line(fd);
         else
         {
-            ft_printf_stderr("The maximum number of objects is INT_MAX\n");
+            ft_printf_stderr(NOTICE_MAX_OBJECTS);
             break;
         }
 	}
