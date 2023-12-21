@@ -237,5 +237,6 @@ void				read_cylinder_info(t_scene *scene, char **info,
 size_t	count_num_shapes(char *file);
 void	read_info(t_scene *scene, char *filename);
 double ft_atod(char *str);
+void normalize_color(t_color3 *col);
 
 #endif

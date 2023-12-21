@@ -2,9 +2,12 @@
 
 void normalize_color(t_color3 *col)
 {
-    col->r = col->r/255.0;
-    col->g = col->r/255.0;
-    col->b = col->b/255.0;
+    if(col->r != 0)
+        col->r = col->r/255.0;
+    if(col->g != 0)
+        col->g = col->g/255.0;
+    if(col->b != 0)
+        col->b = col->b/255.0;
 }
 
 void read_sphere_info(t_scene *scene, char **info, size_t line_num, size_t *store_shape_num)

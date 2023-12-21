@@ -16,19 +16,18 @@ size_t	count_num_shapes(char *filename)
         error_exit(ERROR_EMPTY_FILE);
 	while (line)
 	{
-        // if(is_all_space(line))
-        //     continue;
         char **info;
         info = ft_split(line, ' ');
         if(!info)
             error_exit(ERROR_MALLOC);
 		if (!ft_strncmp(info[0], "sp", 3) ||
-            !ft_strncmp(info[0], "pl", 3) ||!ft_strncmp(info[0], "cy ", 3))
+            !ft_strncmp(info[0], "pl", 3) ||!ft_strncmp(info[0], "cy", 3))
             line_num++;
         free(line);
         ft_split_array_all_free(info);
         line = get_next_line(fd);
 	}
+    line = 0;
     close(fd);
     return line_num;
 }

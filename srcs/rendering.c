@@ -54,9 +54,7 @@ static void	ft_set_eye_ray(t_ray *ray, t_camera camera, int x, int y)
 	ray->pw = v_add(v_add(camera.camera_position, v_mult(camera.forward_dir, screen_distance)), v_add(v_mult(ray->x_dir, dx), v_mult(ray->y_dir, dy)));
 	ray->start = camera.camera_position;
 	ray->direction = v_sub(ray->pw, camera.camera_position);
-	printf("x %f", ray->start.x);
-        printf(" y %f", ray->start.y);
-        printf(" z %f\n", ray->start.z);
+
 }
 
 static void	ft_set_color_of_pixel(t_rt *rt, int x, int y)

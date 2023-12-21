@@ -84,6 +84,7 @@ void	ft_init_scene(char *file, t_scene *scene)
 {
 	(void)file;
 	scene->num_shapes = count_num_shapes(file);
+	printf("num_shapes: %zu\n", scene->num_shapes);
 	scene->shapes = malloc(sizeof(t_shape) * scene->num_shapes + 1);//メモリ確保(失敗した時のfree,exit処理必要)
 
 	read_info(scene, file);

@@ -13,7 +13,7 @@ void check_info_count(char **info, size_t need_info_count, size_t line_num)
 {
     if(count_info_in_line(info) != need_info_count)
     {
-        ft_printf_stderr("Error :.rt : line %zu: Check how much information this object requires", line_num);
+        printf("Error :.rt : line %zu: Check how much information this object requires", line_num);
         exit(1);
     }
 }

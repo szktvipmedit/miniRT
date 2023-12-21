@@ -5,14 +5,16 @@ void	ft_split_array_all_free(char **str)
 	ssize_t len;
 	len = 0;
 	while (str[len])
-		len++;
+			len++;
 	len--;
 	while (len >= 0 && str[len])
 	{	
 		free(str[len]);
+		str[len] = 0;
 		len--;
 	}
 	free(str);
+	str = 0;
 }
 
 static int	ft_sign_check(char c, size_t *i)

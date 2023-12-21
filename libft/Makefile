@@ -11,7 +11,7 @@
 # **************************************************************************** #
 
 CC					= cc
-CFLAGS			= -Wall -Wextra -Werror
+CFLAGS			= -Wall -Wextra -Werror -g
 
 SRCS				= ft_isalpha.c \
 							ft_isdigit.c \

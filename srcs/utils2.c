@@ -4,7 +4,6 @@ double ft_atod(char *str)
 {
     /* strに関するエラー処理(ft_)はこの関数実行前にやれ */
     double integer;
-	
     size_t i;
     int minus_flag;
     integer = 0;

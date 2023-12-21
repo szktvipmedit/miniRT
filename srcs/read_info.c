@@ -1,5 +1,14 @@
 #include "../incs/minirt.h"
-
+int is_all_spaces(char *str)
+{
+	while(*str)
+	{
+		if(*str != ' ')
+			return 0;
+		str++;
+	}
+	return 1;
+}
 void	read_info(t_scene *scene, char *filename)
 {
 	int fd;
@@ -18,10 +27,16 @@ void	read_info(t_scene *scene, char *filename)
         error_exit(ERROR_EMPTY_FILE);
 	while (line)
 	{
-        // if(is_all_space(line))
-        //     continue;
 		if(line[ft_strlen(line)-1] == '\n')
 			line[ft_strlen(line)-1]	= '\0';
+        if(is_all_spaces(line))
+		{
+        	free(line);
+        	line = get_next_line(fd);
+			line_num++;
+            continue;
+		}
+        printf("%s\n", line);
         char **info;
         info = ft_split(line, ' ');
         if(!info)

@@ -12,10 +12,6 @@ void	ft_calculate_sphere_t(t_sphere *sph, t_ray *ray, t_vec3 pe_pc, double *t)
 	b = 2 * v_dot(ray->direction, pe_pc);
 	c = v_dot(pe_pc, pe_pc) - square(sph->radius);
 	d = square(b) - 4 * a * c;
-	// printf("A %f", a);
-    //     printf("B %f", b);
-    //     printf("C %f", c);
-    //     printf("D %f\n", d);
 	if ( d == 0 )
 		*t = -b / (2 * a);
 	else if ( d > 0 )
@@ -37,12 +33,7 @@ int	ft_test_sphere(t_shape *shape, t_ray* ray, t_intersection_point* out_intp)
 	double		t;
 	
   sph = &shape->u_data.sphere;
-        printf("x %f", ray->start.x);
-        printf(" y %f", ray->start.y);
-        printf(" z %f\n", ray->start.z);
 	pe_pc = v_sub(ray->start, sph->center);
-	// printf("start %f", ray->start.x);
-    //     printf("center %f", sph->center.x);
 	t = -1.0;
   ft_calculate_sphere_t(sph, ray, pe_pc, &t);
 	if ( t > 0 )
@@ -50,7 +41,6 @@ int	ft_test_sphere(t_shape *shape, t_ray* ray, t_intersection_point* out_intp)
 		if ( out_intp )
 		{
 			out_intp->distance = t;
-			//  printf("t %f\n", t);
 			out_intp->position = v_add(ray->start, v_mult(ray->direction, t));
 			out_intp->normal = v_sub(out_intp->position, sph->center);
 			out_intp->normal = v_normalize(out_intp->normal);
