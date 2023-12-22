@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   intersection_test_utils.c                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jyasukaw <jyasukaw@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kousuzuk <kousuzuk@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/22 14:51:36 by jyasukaw          #+#    #+#             */
-/*   Updated: 2023/12/22 15:01:42 by jyasukaw         ###   ########.fr       */
+/*   Updated: 2023/12/22 15:16:08 by kousuzuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@ void	ft_calculate_sphere_t(t_sphere *sph,
 	{
 		c = (-b + sqrt(d)) / (2 * a);
 		c2 = (-b - sqrt(d)) / (2 * a);
-
 		if (c > 0)
 			*t = c;
 		if (c2 > 0 && c2 < *t)
