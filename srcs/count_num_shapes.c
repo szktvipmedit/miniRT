@@ -6,7 +6,7 @@
 /*   By: kousuzuk <kousuzuk@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/22 14:25:52 by kousuzuk          #+#    #+#             */
-/*   Updated: 2023/12/22 14:34:46 by kousuzuk         ###   ########.fr       */
+/*   Updated: 2023/12/22 15:07:31 by kousuzuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,11 +23,10 @@ int	is_all_spaces(char *str)
 	return (1);
 }
 
-static int	new_line(char *line, int fd, size_t line_num)
+static int	new_line(int line_num)
 {
 	if (line_num < INT_MAX)
 	{
-		line = get_next_line(fd);
 		return (0);
 	}
 	else
@@ -37,7 +36,7 @@ static int	new_line(char *line, int fd, size_t line_num)
 	}
 }
 
-static void	count_num_shapes_each_shape(char *line, int fd, size_t *line_num)
+static void	count_num_shapes_each_shape(char *line, int fd, int *line_num)
 {
 	char	**info;
 
@@ -54,11 +53,13 @@ static void	count_num_shapes_each_shape(char *line, int fd, size_t *line_num)
 			error_exit(ERROR_MALLOC);
 		if (!ft_strncmp(info[0], "sp", 3) || !ft_strncmp(info[0], "pl", 3)
 			|| !ft_strncmp(info[0], "cy", 3))
-			*line_num++;
+			(*line_num)++;
 		free(line);
 		ft_split_array_all_free(info);
-		if (new_line(line, fd, line_num))
+		if (new_line(*line_num))
 			break ;
+		else
+			line = get_next_line(fd);
 	}
 }
 
