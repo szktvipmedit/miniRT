@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   raytrace.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kousuzuk <kousuzuk@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/12/22 14:51:45 by kousuzuk          #+#    #+#             */
+/*   Updated: 2023/12/22 14:51:51 by kousuzuk         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../incs/minirt.h"
 
 static void	ft_add_ambient_color(t_scene scene, t_color3 *color)
@@ -7,27 +19,33 @@ static void	ft_add_ambient_color(t_scene scene, t_color3 *color)
 	color->b += scene.ambient.ambient_ref * scene.ambient.amb_illuminance.b;
 }
 
-static void	ft_add_diffuse_color(t_scene scene, t_shape *shape, double nl_dot, t_color3 *color)
+static void	ft_add_diffuse_color(t_scene scene, t_shape *shape, double nl_dot,
+		t_color3 *color)
 {
 	color->r += shape->diffuse_ref.r * scene.light.illuminance.r * nl_dot;
 	color->g += shape->diffuse_ref.g * scene.light.illuminance.g * nl_dot;
 	color->b += shape->diffuse_ref.b * scene.light.illuminance.b * nl_dot;
 }
 
-static void	ft_add_specular_color(t_scene scene, double vr_dot_pow, t_color3 *color)
+static void	ft_add_specular_color(t_scene scene, double vr_dot_pow,
+		t_color3 *color)
 {
-	color->r += scene.light.specular_ref * scene.light.illuminance.r * vr_dot_pow;
-	color->g += scene.light.specular_ref * scene.light.illuminance.g * vr_dot_pow;
-	color->b += scene.light.specular_ref * scene.light.illuminance.b * vr_dot_pow;
+	color->r += scene.light.specular_ref * scene.light.illuminance.r
+		* vr_dot_pow;
+	color->g += scene.light.specular_ref * scene.light.illuminance.g
+		* vr_dot_pow;
+	color->b += scene.light.specular_ref * scene.light.illuminance.b
+		* vr_dot_pow;
 }
 
-static void	ft_add_light_ref_color(t_rt *rt, t_shape *shape, t_intersection_point intp, t_vec3 light_dir)
+static void	ft_add_light_ref_color(t_rt *rt, t_shape *shape,
+		t_intersection_point intp, t_vec3 light_dir)
 {
-	double nl_dot;
-	t_vec3 ref_dir;
-	t_vec3 inv_eye_dir;
-	double vr_dot;
-	double vr_dot_pow;
+	double	nl_dot;
+	t_vec3	ref_dir;
+	t_vec3	inv_eye_dir;
+	double	vr_dot;
+	double	vr_dot_pow;
 
 	nl_dot = v_dot(light_dir, intp.normal);
 	nl_dot = constrain(nl_dot, 0, 1);
@@ -47,18 +65,17 @@ static void	ft_add_light_ref_color(t_rt *rt, t_shape *shape, t_intersection_poin
 
 void	ft_raytrace(t_rt *rt)
 {
-	t_shape 							*shape;
+	t_shape					*shape;
 	t_intersection_point	intp;
-	t_vec3 								light_dir;
-	double 								dl;
+	t_vec3					light_dir;
+	double					dl;
 	t_intersection_point	tmp;
 
-	rt->flag = ft_get_nearest_shape(rt, &rt->ray, &shape, &intp);//視線方向(ray)の方向でもっとも近い物体を探す
-	if (rt->flag == 0)//視線方向に物体がなかった場合はここでreturn
-		return ;
-  ft_add_ambient_color(rt->scene, &rt->color);//環境光の強さを計算してcolに入れる
+	rt->flag = ft_get_nearest_shape(rt, &rt->ray, &shape, &intp);
+	if (rt->flag == 0)
+		ft_add_ambient_color(rt->scene, &rt->color);
 	light_dir = v_sub(rt->scene.light.vector, intp.position);
-	dl = v_norm(light_dir) - EPSILON;//正規化する前の入射ベクトルの大きさを代入
+	dl = v_norm(light_dir) - EPSILON;
 	light_dir = v_normalize(light_dir);
 	rt->shadow_ray.start = v_add(intp.position, v_mult(light_dir, EPSILON));
 	rt->shadow_ray.direction = light_dir;

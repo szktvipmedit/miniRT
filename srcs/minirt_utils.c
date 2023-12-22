@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minirt_utils.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kousuzuk <kousuzuk@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/12/22 14:52:36 by kousuzuk          #+#    #+#             */
+/*   Updated: 2023/12/22 14:52:47 by kousuzuk         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../incs/minirt.h"
 
-int	ft_clean_up_and_exit(t_rt *rt) //ここにfree処理なども追加
+int	ft_clean_up_and_exit(t_rt *rt)
 {
 	if (rt->img_ptr != NULL)
 		mlx_destroy_image(rt->mlx_ptr, rt->img_ptr);
@@ -9,7 +21,7 @@ int	ft_clean_up_and_exit(t_rt *rt) //ここにfree処理なども追加
 	if (rt->win_ptr != NULL)
 		mlx_destroy_window(rt->mlx_ptr, rt->win_ptr);
 	exit(1);
-	return (0); // mlx_hookの引数に渡すためにint型にしてある
+	return (0);
 }
 
 void	error_exit(char *error_message)
