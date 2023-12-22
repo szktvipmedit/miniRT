@@ -3,17 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   intersection_test_utils.c                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jyasukaw <jyasukaw@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kousuzuk <kousuzuk@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/22 14:51:36 by jyasukaw          #+#    #+#             */
-/*   Updated: 2023/12/22 16:23:52 by jyasukaw         ###   ########.fr       */
+/*   Updated: 2023/12/22 16:52:55 by kousuzuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../incs/minirt.h"
 
 void	ft_calculate_sphere_t(t_sphere *sph,
-	t_ray *ray, t_vec3 pe_pc, double *t)
+							t_ray *ray,
+							t_vec3 pe_pc,
+							double *t)
 {
 	double	a;
 	double	b;
@@ -92,7 +94,7 @@ int	ft_test_plane(t_shape *shape, t_ray *ray, t_intersection_point *out_intp)
 	return (0);
 }
 
-int	ft_set_cy_info(t_cy *cy, t_cylinder	*cylin, t_ray *ray)
+int	ft_set_cy_info(t_cy *cy, t_cylinder *cylin, t_ray *ray)
 {
 	cy->a = v_norm(v_cross(ray->direction, cylin->normal));
 	cy->a = square(cy->a);
@@ -108,15 +110,16 @@ int	ft_set_cy_info(t_cy *cy, t_cylinder	*cylin, t_ray *ray)
 	cy->p_outer = v_add(ray->start, v_mult(ray->direction, cy->t_outer));
 	cy->p_inner = v_add(ray->start, v_mult(ray->direction, cy->t_inner));
 	cy->center_2p_outer = v_sub(cy->p_outer, v_add(cylin->position,
-			v_mult(v_mult(cylin->normal, -1), cylin->height / 2)));
+				v_mult(v_mult(cylin->normal, -1), cylin->height / 2)));
 	cy->center_2p_inner = v_sub(cy->p_inner, v_add(cylin->position,
-			v_mult(v_mult(cylin->normal, -1), cylin->height / 2)));
+				v_mult(v_mult(cylin->normal, -1), cylin->height / 2)));
 	cy->height_outer = v_dot(cy->center_2p_outer, cylin->normal);
 	cy->height_inner = v_dot(cy->center_2p_inner, cylin->normal);
 	return (0);
 }
 
-int	ft_test_cylinder(t_shape *shape, t_ray *ray, t_intersection_point *out_intp, t_rt *rt)
+int	ft_test_cylinder(t_shape *shape, t_ray *ray, t_intersection_point *out_intp,
+		t_rt *rt)
 {
 	t_cylinder	*cylin;
 	t_cy		cy;
@@ -124,24 +127,19 @@ int	ft_test_cylinder(t_shape *shape, t_ray *ray, t_intersection_point *out_intp,
 	cylin = &shape->u_data.cylinder;
 	if (ft_set_cy_info(&cy, cylin, ray) == -1)
 		return (0);
-
-	if (fabs(rt->scene.camera.forward_dir.x - cylin->normal.x) < EPSILON && fabs(rt->scene.camera.forward_dir.y - cylin->normal.y) < EPSILON && fabs(rt->scene.camera.forward_dir.z - cylin->normal.z) < EPSILON)
+	if (fabs(rt->scene.camera.forward_dir.x - cylin->normal.x) < EPSILON
+		&& fabs(rt->scene.camera.forward_dir.y - cylin->normal.y) < EPSILON
+		&& fabs(rt->scene.camera.forward_dir.z - cylin->normal.z) < EPSILON)
 		return (0);
 	if (cy.height_outer >= 0 && cy.height_outer <= cylin->height)
 	{
-		out_intp->normal = v_sub(cy.center_2p_outer, v_mult(cylin->normal, cy.height_outer));
-		out_intp->normal = v_normalize(out_intp->normal);
-		out_intp->distance = cy.t_outer;
-		out_intp->position = cy.p_outer;
+		store_cylinder_info_out(out_intp, &cy, cylin);
 		if (cy.t_outer > 0)
 			return (1);
 	}
 	else if (cy.height_inner >= 0 && cy.height_inner <= cylin->height)
 	{
-		out_intp->normal = v_sub(v_mult(cylin->normal, cy.height_inner), cy.center_2p_inner);
-		out_intp->normal = v_normalize(out_intp->normal);
-		out_intp->distance = cy.t_inner;
-		out_intp->position = cy.p_inner;
+		store_cylinder_info_in(out_intp, &cy, cylin);
 		if (cy.t_inner > 0)
 			return (1);
 	}
