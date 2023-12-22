@@ -6,7 +6,7 @@
 /*   By: kousuzuk <kousuzuk@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 14:11:34 by kousuzuk          #+#    #+#             */
-/*   Updated: 2023/12/05 14:52:07 by kousuzuk         ###   ########.fr       */
+/*   Updated: 2023/12/22 13:26:34 by kousuzuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,22 +27,9 @@ static void	ft_skip(char **str, int *sign, size_t *i)
 static int	ft_isoverflow(long long nbr, unsigned int digit, int sign)
 {
 	if (sign < 0)
-	{
-		// printf("--------digit %u----------\n", digit);
-		// printf("L+d    %i\n", INT_MIN + digit);
-		// int i =INT_MIN + digit;
-		// printf("L+d/10 %i\n", (INT_MIN + digit) / 10);
-		// printf("nbr    %lli\n", -nbr);
-		return ((INT_MIN + digit) / 10 > (-1) * nbr);
-	}
+		return ((LONG_MIN + digit) / 10 > (-1) * nbr);
 	if (sign > 0)
-	{
-		// printf("--------digit %u----------\n", digit);
-		// printf("L-d    %i\n", INT_MAX - digit);
-		// printf("L-d/10 %i\n", i / 10);
-		// printf("nbr    %lli\n", nbr);
-		return ((INT_MAX - digit) / 10 < nbr);
-	}
+		return ((LONG_MAX - digit) / 10 < nbr);
 	return (0);
 }
 
@@ -69,13 +56,3 @@ int	ft_atoi(char *str)
 	}
 	return ((int)(sign * nbr));
 }
-
-
-// int main()
-// {
-// 	int i = -214748364;
-// 	printf("%i\n", ft_atoi("2147483648"));
-// 	printf("\n\n\n");
-// 	printf("%i\n", ft_atoi("-2147483648"));
-// 	printf("%i", i);
-// }

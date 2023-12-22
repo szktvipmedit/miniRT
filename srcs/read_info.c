@@ -63,8 +63,6 @@ void	read_info(t_scene *scene, char *filename)
 	int		fd;
 	char	*line;
 
-	if (!ft_verify_file_extension(filename, ".rt"))
-		error_exit(ERROR_USAGE);
 	fd = open(filename, O_RDONLY);
 	if (fd < 0)
 		error_exit(ERROR_OPEN);

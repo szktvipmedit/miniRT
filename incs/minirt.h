@@ -216,7 +216,6 @@ t_vec3				v_normalize(t_vec3 v);
 void				error_exit(char *error_message);
 int					ft_syntax_check_double_value(char *str);
 void				ft_split_array_all_free(char **str);
-int					ft_verify_file_extension(char *filename, char *extension);
 
 size_t				count_info_in_line(char **info);
 void				check_info_count(char **info, size_t need_info_count,
@@ -245,6 +244,6 @@ int					count_num_shapes(char *file);
 void				read_info(t_scene *scene, char *filename);
 double				ft_atod(char *str);
 void				normalize_color(t_color3 *col);
-int	is_all_spaces(char *str);
+int					is_all_spaces(char *str);
 
 #endif

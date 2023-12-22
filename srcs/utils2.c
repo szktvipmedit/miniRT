@@ -14,12 +14,26 @@ static int sign_flag(char *str, size_t *i)
 	return minus_flag;
 }
 
-static double integer_part(char *str, size_t *i)
+static int	ft_isoverflow(long long nbr, unsigned int digit, int sign)
+{
+	if (sign < 0)
+		return ((DBL_MIN + digit) / 10 > (-1) * nbr);
+	if (sign > 0)
+		return ((DBL_MAX - digit) / 10 < nbr);
+	return (0);
+}
+
+static double integer_part(char *str, size_t *i, int sign)
 {
 	double integer;
 	integer = 0;
 	while(str[*i] && ft_isdigit(str[*i]))
     {
+		if (ft_isoverflow(integer, (str[*i] - '0'), sign))
+		{
+			ft_printf_stderr("The compatible range of input values is DBL_MIN to DBL_MAX\n");
+			exit(1);
+		}
         integer *= 10;
 		integer += str[*i] - '0';
         (*i)++;
@@ -27,16 +41,23 @@ static double integer_part(char *str, size_t *i)
 	return integer;
 }
 
-static void decimal_part(char *str, double *decimal, size_t *deci_len, size_t *i)
+static size_t decimal_part(char *str, double *decimal, size_t *i, int sign)
 {
-
+	size_t deci_len;
+	deci_len = 0;
 	while(str[*i] && ft_isdigit(str[*i]))
     {
+		if (ft_isoverflow(*decimal, (str[*i] - '0'), sign))
+		{
+			ft_printf_stderr("The compatible range of input values is DBL_MIN to DBL_MAX\n");
+			exit(1);
+		}
         *decimal *= 10;
 		*decimal += str[*i] - '0';
         (*i)++;
-		(*deci_len)++;
+		deci_len++;
     }
+	return deci_len;
 }
 
 double ft_atod(char *str)
@@ -49,49 +70,13 @@ double ft_atod(char *str)
     minus_flag = 1;
     
 	minus_flag = sign_flag(str, &i);
-    //正数部
-	integer = integer_part(str, &i);
+	integer = integer_part(str, &i, minus_flag);
 	if(str[i] != '.')
 		return minus_flag * integer;
 	i++;
-    //少数部
 	double decimal;
-	size_t deci_len;
+	double deci_len;
 	decimal = 0;
-	deci_len = 0;
-	decimal_part(str, &decimal, &deci_len, &i);
+	deci_len = decimal_part(str, &decimal, &i, minus_flag);
     return minus_flag * (integer + (decimal / pow(10, deci_len)));
 }
-
-int	ft_verify_file_extension(char *filename, char *extension)
-{
-	size_t	i;
-	size_t	dot_i;
-	size_t	len;
-
-	if (!filename || !extension || ft_strlen(filename) == 1)
-    	error_exit("Error: ft_isverify_file_extension()\n");
-	i = 0;
-	len = ft_strlen(filename);
-	dot_i = len - 1;
-	while (dot_i >= 0)
-	{
-		if (filename[dot_i] == '.')
-			break ;
-		dot_i--;
-	}
-	while (i < ft_strlen(extension))
-	{
-		if (dot_i == 0 || filename[dot_i++] != extension[i++])
-			return (0);
-	}
-	return (1);
-}
-
-// int main()
-// {
-// 	double f = 500.21309481891;
-
-//     printf("%f\n", ft_atod("0a.21309481891"));
-//     printf("%f\n", f);
-// }

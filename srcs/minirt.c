@@ -34,7 +34,7 @@ int	main(int argc, char **argv)
 
 	if(argc == 2)
     {
-		rt = (t_rt){0};
+		// rt = (t_rt){0};
 		ft_init_scene(argv[1], &rt.scene);
 		ft_init_rt(&rt);
 		ft_rendering(&rt);

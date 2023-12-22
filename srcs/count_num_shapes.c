@@ -16,8 +16,6 @@ int	count_num_shapes(char *filename)
 	int fd;
 	int line_num;
 	char *line;
-    if(!ft_verify_file_extension(filename, ".rt"))
-        error_exit(ERROR_USAGE);
 	fd = open(filename, O_RDONLY);
 	if (fd < 0)
 		error_exit(ERROR_OPEN);
