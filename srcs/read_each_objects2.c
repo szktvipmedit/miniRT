@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   read_each_objects2.c                               :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kousuzuk <kousuzuk@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/12/22 14:26:34 by kousuzuk          #+#    #+#             */
+/*   Updated: 2023/12/22 14:40:09 by kousuzuk         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../incs/minirt.h"
 
 void	normalize_color(t_color3 *col)
@@ -41,12 +53,13 @@ void	read_plane_info(t_scene *scene, char **info, int line_num,
 	normalize_color(&scene->shapes[*store_shape_num].diffuse_ref);
 	(*store_shape_num)++;
 }
+
 void	read_cylinder_info(t_scene *scene, char **info, int line_num,
 		int *store_shape_num)
 {
-	t_cylinder *cylin;
-	scene->shapes[(*store_shape_num)].type = ST_CYLINDER;
+	t_cylinder	*cylin;
 
+	scene->shapes[(*store_shape_num)].type = ST_CYLINDER;
 	cylin = &scene->shapes[(*store_shape_num)].u_data.cylinder;
 	check_info_count(info, 6, line_num);
 	store_coordinate_values(&cylin->position, info[1], line_num);

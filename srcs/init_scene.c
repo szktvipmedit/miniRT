@@ -1,23 +1,37 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   init_scene.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kousuzuk <kousuzuk@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/12/22 14:17:59 by kousuzuk          #+#    #+#             */
+/*   Updated: 2023/12/22 14:26:12 by kousuzuk         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../incs/minirt.h"
 
-static int is_path(char *str)
+static int	is_path(char *str)
 {
-	size_t i;
+	size_t	i;
+
 	i = 0;
-	while(str[i])
+	while (str[i])
 	{
-		if(str[i] == '/')
-			return 1;
+		if (str[i] == '/')
+			return (1);
 		i++;
-	}	
-	return 0;
+	}
+	return (0);
 }
 
-static void get_filename_from_path(char *path)
+static void	get_filename_from_path(char *path)
 {
-	size_t len;
-	size_t sla_i;
-	if(!is_path(path))
+	size_t	len;
+	size_t	sla_i;
+
+	if (!is_path(path))
 		return ;
 	len = ft_strlen(path);
 	sla_i = len - 1;
@@ -27,7 +41,7 @@ static void get_filename_from_path(char *path)
 			break ;
 		sla_i--;
 	}
-	path = path + sla_i+1;
+	path = path + sla_i + 1;
 }
 
 static int	ft_verify_file_extension(char *filename, char *extension)
@@ -35,9 +49,10 @@ static int	ft_verify_file_extension(char *filename, char *extension)
 	size_t	i;
 	size_t	dot_i;
 	size_t	len;
+
 	get_filename_from_path(filename);
 	if (!filename || !extension || ft_strlen(filename) == 1)
-    	return 0;
+		return (0);
 	i = 0;
 	len = ft_strlen(filename);
 	dot_i = len - 1;

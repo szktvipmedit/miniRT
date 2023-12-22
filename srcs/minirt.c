@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minirt.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kousuzuk <kousuzuk@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/12/22 14:52:08 by kousuzuk          #+#    #+#             */
+/*   Updated: 2023/12/22 14:52:09 by kousuzuk         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../incs/minirt.h"
 
 static void	ft_init_rt(t_rt *rt)
@@ -11,7 +23,8 @@ static void	ft_init_rt(t_rt *rt)
 	rt->img_ptr = mlx_new_image(rt->mlx_ptr, WIDTH, HEIGHT);
 	if (rt->img_ptr == NULL)
 		ft_clean_up_and_exit(rt);
-	rt->pixel_addr = mlx_get_data_addr(rt->img_ptr, &rt->bit_per_pixel, &rt->size_line, &rt->endian);
+	rt->pixel_addr = mlx_get_data_addr(rt->img_ptr, &rt->bit_per_pixel,
+			&rt->size_line, &rt->endian);
 	if (rt->pixel_addr == NULL)
 		ft_clean_up_and_exit(rt);
 }
@@ -32,9 +45,8 @@ int	main(int argc, char **argv)
 {
 	t_rt	rt;
 
-	if(argc == 2)
-    {
-		// rt = (t_rt){0};
+	if (argc == 2)
+	{
 		ft_init_scene(argv[1], &rt.scene);
 		ft_init_rt(&rt);
 		ft_rendering(&rt);
@@ -43,6 +55,6 @@ int	main(int argc, char **argv)
 		mlx_loop(rt.mlx_ptr);
 		exit(0);
 	}
-    else
-        error_exit(ERROR_ARG_CNT);
+	else
+		error_exit(ERROR_ARG_CNT);
 }

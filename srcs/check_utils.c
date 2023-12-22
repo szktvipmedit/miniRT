@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   check_utils.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kousuzuk <kousuzuk@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/12/22 14:17:21 by kousuzuk          #+#    #+#             */
+/*   Updated: 2023/12/22 14:39:41 by kousuzuk         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../incs/minirt.h"
 
 size_t	count_info_in_line(char **info)
@@ -32,14 +44,10 @@ double	check_range_value(double val, double range_min, double range_max,
 	return (val);
 }
 
-// void    check_str_double_range(char *str)
-// {
-
-// }
-
 double	create_double_value(char *str, int line_num)
 {
-	double val;
+	double	val;
+
 	if (ft_syntax_check_double_value(str))
 	{
 		ft_printf_stderr("Error :.rt : line %i: %s is invalid value. ",

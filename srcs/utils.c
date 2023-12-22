@@ -1,14 +1,27 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kousuzuk <kousuzuk@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/12/22 14:27:18 by kousuzuk          #+#    #+#             */
+/*   Updated: 2023/12/22 14:40:24 by kousuzuk         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../incs/minirt.h"
 
 void	ft_split_array_all_free(char **str)
 {
-	ssize_t len;
+	ssize_t	len;
+
 	len = 0;
 	while (str[len])
-			len++;
+		len++;
 	len--;
 	while (len >= 0 && str[len])
-	{	
+	{
 		free(str[len]);
 		str[len] = 0;
 		len--;
@@ -43,16 +56,17 @@ static int	decimal_part(char *str, size_t *i)
 		return (1);
 	while (str[*i])
 	{
-		//小数部では数字以外なら以上終了
 		if (!ft_isdigit(str[*i]))
 			return (1);
 		(*i)++;
 	}
 	return (0);
 }
+
 int	ft_syntax_check_double_value(char *str)
 {
 	size_t	i;
+
 	i = 0;
 	if (ft_sign_check(str[0], &i))
 		return (1);
