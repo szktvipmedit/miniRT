@@ -6,7 +6,7 @@
 /*   By: jyasukaw <jyasukaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/22 14:17:47 by jyasukaw          #+#    #+#             */
-/*   Updated: 2023/12/22 15:01:22 by jyasukaw         ###   ########.fr       */
+/*   Updated: 2023/12/22 16:08:13 by jyasukaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,14 +164,15 @@ typedef struct s_cy
 	double	t_inner;
 	t_vec3	p_outer;
 	t_vec3	p_inner;
-	t_vec3	po;
-	t_vec3	pi;
+	t_vec3	center_2p_outer;
+	t_vec3	center_2p_inner;
 	double	height_outer;
 	double	height_inner;
 }	t_cy;
 
 // minirt_utils.c
-int					ft_clean_up_and_exit(t_rt *rt);
+int					ft_clean_up_and_exit_0(t_rt *rt);
+int					ft_clean_up_and_exit_1(t_rt *rt);
 
 // init_scene.c
 void				ft_init_scene(char *file, t_scene *scene);
@@ -195,7 +196,7 @@ int					ft_test_plane(t_shape *shape, t_ray *ray,
 						t_intersection_point *out_intp);
 int					ft_set_cy_info(t_cy *cy, t_cylinder *cylin, t_ray *ray);
 int					ft_test_cylinder(t_shape *shape, t_ray *ray,
-						t_intersection_point *out_intp);
+						t_intersection_point *out_intp, t_rt *rt);
 
 // vec3_utils_1.c
 double				square(double x);

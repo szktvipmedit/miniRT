@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   intersection_test_utils.c                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kousuzuk <kousuzuk@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: jyasukaw <jyasukaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/22 14:51:36 by jyasukaw          #+#    #+#             */
-/*   Updated: 2023/12/22 15:16:08 by kousuzuk         ###   ########.fr       */
+/*   Updated: 2023/12/22 16:23:52 by jyasukaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,14 +107,16 @@ int	ft_set_cy_info(t_cy *cy, t_cylinder	*cylin, t_ray *ray)
 	cy->t_inner = (-cy->b + sqrt(cy->d)) / (2 * cy->a);
 	cy->p_outer = v_add(ray->start, v_mult(ray->direction, cy->t_outer));
 	cy->p_inner = v_add(ray->start, v_mult(ray->direction, cy->t_inner));
-	cy->po = v_sub(cy->p_outer, cylin->position);
-	cy->pi = v_sub(cy->p_inner, cylin->position);
-	cy->height_outer = v_dot(cy->po, cylin->normal);
-	cy->height_inner = v_dot(cy->pi, cylin->normal);
+	cy->center_2p_outer = v_sub(cy->p_outer, v_add(cylin->position,
+			v_mult(v_mult(cylin->normal, -1), cylin->height / 2)));
+	cy->center_2p_inner = v_sub(cy->p_inner, v_add(cylin->position,
+			v_mult(v_mult(cylin->normal, -1), cylin->height / 2)));
+	cy->height_outer = v_dot(cy->center_2p_outer, cylin->normal);
+	cy->height_inner = v_dot(cy->center_2p_inner, cylin->normal);
 	return (0);
 }
 
-int	ft_test_cylinder(t_shape *shape, t_ray *ray, t_intersection_point *out_intp)
+int	ft_test_cylinder(t_shape *shape, t_ray *ray, t_intersection_point *out_intp, t_rt *rt)
 {
 	t_cylinder	*cylin;
 	t_cy		cy;
@@ -122,9 +124,12 @@ int	ft_test_cylinder(t_shape *shape, t_ray *ray, t_intersection_point *out_intp)
 	cylin = &shape->u_data.cylinder;
 	if (ft_set_cy_info(&cy, cylin, ray) == -1)
 		return (0);
+
+	if (fabs(rt->scene.camera.forward_dir.x - cylin->normal.x) < EPSILON && fabs(rt->scene.camera.forward_dir.y - cylin->normal.y) < EPSILON && fabs(rt->scene.camera.forward_dir.z - cylin->normal.z) < EPSILON)
+		return (0);
 	if (cy.height_outer >= 0 && cy.height_outer <= cylin->height)
 	{
-		out_intp->normal = v_sub(cy.po, v_mult(cylin->normal, cy.height_outer));
+		out_intp->normal = v_sub(cy.center_2p_outer, v_mult(cylin->normal, cy.height_outer));
 		out_intp->normal = v_normalize(out_intp->normal);
 		out_intp->distance = cy.t_outer;
 		out_intp->position = cy.p_outer;
@@ -133,7 +138,7 @@ int	ft_test_cylinder(t_shape *shape, t_ray *ray, t_intersection_point *out_intp)
 	}
 	else if (cy.height_inner >= 0 && cy.height_inner <= cylin->height)
 	{
-		out_intp->normal = v_sub(v_mult(cylin->normal, cy.height_inner), cy.pi);
+		out_intp->normal = v_sub(v_mult(cylin->normal, cy.height_inner), cy.center_2p_inner);
 		out_intp->normal = v_normalize(out_intp->normal);
 		out_intp->distance = cy.t_inner;
 		out_intp->position = cy.p_inner;

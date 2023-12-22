@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   raytrace.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kousuzuk <kousuzuk@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: jyasukaw <jyasukaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/22 14:51:45 by kousuzuk          #+#    #+#             */
-/*   Updated: 2023/12/22 14:51:51 by kousuzuk         ###   ########.fr       */
+/*   Updated: 2023/12/22 15:48:13 by jyasukaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,8 @@ void	ft_raytrace(t_rt *rt)
 
 	rt->flag = ft_get_nearest_shape(rt, &rt->ray, &shape, &intp);
 	if (rt->flag == 0)
-		ft_add_ambient_color(rt->scene, &rt->color);
+		return ;
+	ft_add_ambient_color(rt->scene, &rt->color);
 	light_dir = v_sub(rt->scene.light.vector, intp.position);
 	dl = v_norm(light_dir) - EPSILON;
 	light_dir = v_normalize(light_dir);
