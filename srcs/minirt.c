@@ -22,6 +22,7 @@ static int	ft_deal_key(int key_code, t_rt *rt)
 		ft_clean_up_and_exit(rt);
 	return (0);
 }
+
 // __attribute__((destructor))
 // static void destructor() {
 //     system("leaks -q miniRT");

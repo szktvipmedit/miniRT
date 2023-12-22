@@ -1,28 +1,56 @@
 #include "../incs/minirt.h"
 
+static int sign_flag(char *str, size_t *i)
+{
+	int minus_flag;
+
+	minus_flag = 1;
+	if(str[0] == '+' || str[0] == '-')
+	{
+		if(str[0] == '-')
+			minus_flag = -1;
+		(*i)++;
+	}
+	return minus_flag;
+}
+
+static double integer_part(char *str, size_t *i)
+{
+	double integer;
+	integer = 0;
+	while(str[*i] && ft_isdigit(str[*i]))
+    {
+        integer *= 10;
+		integer += str[*i] - '0';
+        (*i)++;
+    }
+	return integer;
+}
+
+static void decimal_part(char *str, double *decimal, size_t *deci_len, size_t *i)
+{
+
+	while(str[*i] && ft_isdigit(str[*i]))
+    {
+        *decimal *= 10;
+		*decimal += str[*i] - '0';
+        (*i)++;
+		(*deci_len)++;
+    }
+}
+
 double ft_atod(char *str)
 {
     /* strに関するエラー処理(ft_)はこの関数実行前にやれ */
     double integer;
     size_t i;
     int minus_flag;
-    integer = 0;
     i = 0;
     minus_flag = 1;
     
-	if(str[0] == '+' || str[0] == '-')
-	{
-		if(str[0] == '-')
-			minus_flag = -1;
-		i++;
-	} 
+	minus_flag = sign_flag(str, &i);
     //正数部
-    while(str[i] && ft_isdigit(str[i]))
-    {
-        integer *= 10;
-		integer += str[i] - '0';
-        i++;
-    }
+	integer = integer_part(str, &i);
 	if(str[i] != '.')
 		return minus_flag * integer;
 	i++;
@@ -31,13 +59,7 @@ double ft_atod(char *str)
 	size_t deci_len;
 	decimal = 0;
 	deci_len = 0;
-	while(str[i] && ft_isdigit(str[i]))
-    {
-        decimal *= 10;
-		decimal += str[i] - '0';
-        i++;
-		deci_len++;
-    }
+	decimal_part(str, &decimal, &deci_len, &i);
     return minus_flag * (integer + (decimal / pow(10, deci_len)));
 }
 
@@ -47,6 +69,8 @@ int	ft_verify_file_extension(char *filename, char *extension)
 	size_t	dot_i;
 	size_t	len;
 
+	if (!filename || !extension || ft_strlen(filename) == 1)
+    	error_exit("Error: ft_isverify_file_extension()\n");
 	i = 0;
 	len = ft_strlen(filename);
 	dot_i = len - 1;

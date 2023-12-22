@@ -1,5 +1,16 @@
 #include "../incs/minirt.h"
 
+int	is_all_spaces(char *str)
+{
+	while (*str)
+	{
+		if (*str != ' ')
+			return (0);
+		str++;
+	}
+	return (1);
+}
+
 int	count_num_shapes(char *filename)
 {
 	int fd;
@@ -16,6 +27,12 @@ int	count_num_shapes(char *filename)
         error_exit(ERROR_EMPTY_FILE);
 	while (line)
 	{
+        if (is_all_spaces(line))
+		{
+			free(line);
+			line = get_next_line(fd);
+			continue ;
+		}
         char **info;
         info = ft_split(line, ' ');
         if(!info)
