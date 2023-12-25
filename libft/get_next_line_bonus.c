@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../incs/minirt.h"
 
 static char	*ft_read_until(int fd, char *buffer, int *is_error)
 {
@@ -109,12 +109,12 @@ char	*get_next_line(int fd)
 	is_error = NO;
 	buffer[fd] = ft_read_until(fd, buffer[fd], &is_error);
 	if (is_error == YES)
-		return (NULL);
+		error_exit(ERROR_MALLOC);
 	nextline = ft_clip_line(buffer[fd], &is_error);
 	if (is_error == YES)
-		return (NULL);
+		error_exit(ERROR_MALLOC);
 	buffer[fd] = ft_save_remainder(buffer[fd], &is_error, nextline);
 	if (is_error == YES)
-		return (NULL);
+		error_exit(ERROR_MALLOC);
 	return (nextline);
 }

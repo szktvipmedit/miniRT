@@ -118,18 +118,13 @@ int	ft_set_cy_info(t_cy *cy, t_cylinder *cylin, t_ray *ray)
 	return (0);
 }
 
-int	ft_test_cylinder(t_shape *shape, t_ray *ray, t_intersection_point *out_intp,
-		t_rt *rt)
+int	ft_test_cylinder(t_shape *shape, t_ray *ray, t_intersection_point *out_intp)
 {
 	t_cylinder	*cylin;
 	t_cy		cy;
 
 	cylin = &shape->u_data.cylinder;
 	if (ft_set_cy_info(&cy, cylin, ray) == -1)
-		return (0);
-	if (fabs(rt->scene.camera.forward_dir.x - cylin->normal.x) < EPSILON
-		&& fabs(rt->scene.camera.forward_dir.y - cylin->normal.y) < EPSILON
-		&& fabs(rt->scene.camera.forward_dir.z - cylin->normal.z) < EPSILON)
 		return (0);
 	if (cy.height_outer >= 0 && cy.height_outer <= cylin->height)
 	{

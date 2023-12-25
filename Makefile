@@ -33,6 +33,7 @@ FILES				= minirt.c \
 							store_values.c \
 							utils.c \
 							utils2.c \
+							intersection_test_utils2.c 
 
 SRCS				= $(addprefix $(SRCS_DIR), $(FILES))
 OBJS				= $(SRCS:$(SRCS_DIR)%.c=$(OBJS_DIR)%.o)

@@ -20,8 +20,8 @@
 # include <limits.h>
 # include <math.h>
 
-# define HEIGHT 512
-# define WIDTH 512
+# define HEIGHT 700
+# define WIDTH 700
 
 # define ESC 53
 
@@ -196,7 +196,7 @@ int					ft_test_plane(t_shape *shape, t_ray *ray,
 						t_intersection_point *out_intp);
 int					ft_set_cy_info(t_cy *cy, t_cylinder *cylin, t_ray *ray);
 int					ft_test_cylinder(t_shape *shape, t_ray *ray,
-						t_intersection_point *out_intp, t_rt *rt);
+						t_intersection_point *out_intp);
 
 // vec3_utils_1.c
 double				square(double x);
@@ -248,5 +248,11 @@ void				read_info(t_scene *scene, char *filename);
 double				ft_atod(char *str);
 void				normalize_color(t_color3 *col);
 int					is_all_spaces(char *str);
+
+void	store_cylinder_info_out(t_intersection_point *out_intp, t_cy *cy,
+		t_cylinder *cylin);
+
+void	store_cylinder_info_in(t_intersection_point *out_intp, t_cy *cy,
+		t_cylinder *cylin);
 
 #endif
