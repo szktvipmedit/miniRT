@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minirt_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jyasukaw <jyasukaw@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kousuzuk <kousuzuk@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/22 14:52:36 by kousuzuk          #+#    #+#             */
-/*   Updated: 2023/12/22 15:32:09 by jyasukaw         ###   ########.fr       */
+/*   Updated: 2023/12/26 13:05:34 by kousuzuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,4 +40,12 @@ void	error_exit(char *error_message)
 {
 	write(2, error_message, ft_strlen(error_message));
 	exit(1);
+}
+
+void	init_read_cnt(t_read_cnt *read_cnt)
+{
+	read_cnt->ambient_cnt = 0;
+	read_cnt->camera_cnt = 0;
+	read_cnt->light_cnt = 0;
+	read_cnt->line_num = 1;
 }

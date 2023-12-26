@@ -6,7 +6,7 @@
 /*   By: kousuzuk <kousuzuk@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 14:13:41 by kousuzuk          #+#    #+#             */
-/*   Updated: 2023/12/05 14:59:38 by kousuzuk         ###   ########.fr       */
+/*   Updated: 2023/12/26 13:39:53 by kousuzuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 int	ft_strncmp(char *s1, char *s2, size_t n)
 {
 	size_t	i;
+
 	if (n == 0)
 		return (0);
 	i = 0;

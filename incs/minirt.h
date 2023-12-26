@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minirt.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jyasukaw <jyasukaw@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kousuzuk <kousuzuk@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/22 14:17:47 by jyasukaw          #+#    #+#             */
-/*   Updated: 2023/12/22 16:08:13 by jyasukaw         ###   ########.fr       */
+/*   Updated: 2023/12/26 13:40:38 by kousuzuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,56 +35,58 @@
 # define ERROR_EMPTY_FILE "Error: The file passed is empty!\n"
 # define ERROR_USAGE "Error: Usage: ./miniRT {~~.rt}\n"
 # define NOTICE_MAX_OBJECTS "The maximum number of objects is INT_MAX\n"
+# define ERROR_INFO_CNT "Please specify one information each for ambient_light,\
+camera, and light\n"
 
 typedef struct s_vec3
 {
-	double	x;
-	double	y;
-	double	z;
-}	t_vec3;
+	double			x;
+	double			y;
+	double			z;
+}					t_vec3;
 
 typedef struct s_color3
 {
-	double	r;
-	double	g;
-	double	b;
-}	t_color3;
+	double			r;
+	double			g;
+	double			b;
+}					t_color3;
 
 typedef struct s_ray
 {
-	t_vec3	start;
-	t_vec3	direction;
-	t_vec3	x_dir;
-	t_vec3	y_dir;
-	t_vec3	pw;
-}	t_ray;
+	t_vec3			start;
+	t_vec3			direction;
+	t_vec3			x_dir;
+	t_vec3			y_dir;
+	t_vec3			pw;
+}					t_ray;
 
 typedef struct s_sphere
 {
-	t_vec3	center;
-	double	radius;
-}	t_sphere;
+	t_vec3			center;
+	double			radius;
+}					t_sphere;
 
 typedef struct s_plane
 {
-	t_vec3	position;
-	t_vec3	normal;
-}	t_plane;
+	t_vec3			position;
+	t_vec3			normal;
+}					t_plane;
 
 typedef struct s_cylinder
 {
-	t_vec3	position;
-	double	radius;
-	double	height;
-	t_vec3	normal;
-}	t_cylinder;
+	t_vec3			position;
+	double			radius;
+	double			height;
+	t_vec3			normal;
+}					t_cylinder;
 
 typedef enum e_shape_type
 {
 	ST_SPHERE,
 	ST_PLANE,
 	ST_CYLINDER
-}	t_shape_type;
+}					t_shape_type;
 
 typedef struct s_shape
 {
@@ -97,43 +99,51 @@ typedef struct s_shape
 		t_cylinder	cylinder;
 	} u_data;
 	t_color3		diffuse_ref;
-}	t_shape;
+}					t_shape;
 
 typedef struct s_light
 {
-	t_vec3		vector;
-	double		specular_ref;
-	t_color3	illuminance;
-}	t_light;
+	t_vec3			vector;
+	double			specular_ref;
+	t_color3		illuminance;
+}					t_light;
 
 typedef struct s_ambient
 {
-	double		ambient_ref;
-	t_color3	amb_illuminance;
-}	t_ambient;
+	double			ambient_ref;
+	t_color3		amb_illuminance;
+}					t_ambient;
 
 typedef struct s_camera
 {
-	t_vec3	camera_position;
-	t_vec3	forward_dir;
-	double	degree;
-}	t_camera;
+	t_vec3			camera_position;
+	t_vec3			forward_dir;
+	double			degree;
+}					t_camera;
+
+typedef struct s_read_cnt
+{
+	int				light_cnt;
+	int				ambient_cnt;
+	int				camera_cnt;
+	int				line_num;
+}					t_read_cnt;
 
 typedef struct s_intersection_point
 {
-	t_vec3	position;
-	t_vec3	normal;
-	double	distance;
-}	t_intersection_point;
+	t_vec3			position;
+	t_vec3			normal;
+	double			distance;
+}					t_intersection_point;
 
 typedef struct s_scene
 {
-	t_ambient	ambient;
-	t_camera	camera;
-	t_light		light;
-	t_shape		*shapes;
-	ssize_t		num_shapes;
-}	t_scene;
+	t_ambient		ambient;
+	t_camera		camera;
+	t_light			light;
+	t_shape			*shapes;
+	ssize_t			num_shapes;
+}					t_scene;
 
 typedef struct s_rt
 {
@@ -152,23 +162,23 @@ typedef struct s_rt
 	int				flag;
 	t_ray			shadow_ray;
 
-}	t_rt;
+}					t_rt;
 
 typedef struct s_cy
 {
-	double	a;
-	double	b;
-	double	c;
-	double	d;
-	double	t_outer;
-	double	t_inner;
-	t_vec3	p_outer;
-	t_vec3	p_inner;
-	t_vec3	center_2p_outer;
-	t_vec3	center_2p_inner;
-	double	height_outer;
-	double	height_inner;
-}	t_cy;
+	double			a;
+	double			b;
+	double			c;
+	double			d;
+	double			t_outer;
+	double			t_inner;
+	t_vec3			p_outer;
+	t_vec3			p_inner;
+	t_vec3			center_2p_outer;
+	t_vec3			center_2p_inner;
+	double			height_outer;
+	double			height_inner;
+}					t_cy;
 
 // minirt_utils.c
 int					ft_clean_up_and_exit_0(t_rt *rt);
@@ -233,10 +243,12 @@ void				store_coordinate_values(t_vec3 *vec, char *info,
 						int line_num);
 void				store_rgb_values(t_color3 *col, char *info, int line_num);
 
-void				read_light_info(t_scene *scene, char **info, int line_num);
-void				read_camera_info(t_scene *scene, char **info, int line_num);
+void				read_light_info(t_scene *scene, char **info, int line_num,
+						t_read_cnt *read_cnt);
+void				read_camera_info(t_scene *scene, char **info, int line_num,
+						t_read_cnt *read_cnt);
 void				read_ambient_light_info(t_scene *scene, char **info,
-						int line_num);
+						int line_num, t_read_cnt *read_cnt);
 void				read_sphere_info(t_scene *scene, char **info, int line_num,
 						int *store_shape_num);
 void				read_plane_info(t_scene *scene, char **info, int line_num,
@@ -244,15 +256,17 @@ void				read_plane_info(t_scene *scene, char **info, int line_num,
 void				read_cylinder_info(t_scene *scene, char **info,
 						int line_num, int *store_shape_num);
 int					count_num_shapes(char *file);
-void				read_info(t_scene *scene, char *filename);
+void				read_info(t_scene *scene, char *filename,
+						t_read_cnt *read_cnt);
 double				ft_atod(char *str);
 void				normalize_color(t_color3 *col);
 int					is_all_spaces(char *str);
 
-void	store_cylinder_info_out(t_intersection_point *out_intp, t_cy *cy,
-		t_cylinder *cylin);
+void				store_cylinder_info_out(t_intersection_point *out_intp,
+						t_cy *cy, t_cylinder *cylin);
 
-void	store_cylinder_info_in(t_intersection_point *out_intp, t_cy *cy,
-		t_cylinder *cylin);
+void				store_cylinder_info_in(t_intersection_point *out_intp,
+						t_cy *cy, t_cylinder *cylin);
+void				init_read_cnt(t_read_cnt *read_cnt);
 
 #endif

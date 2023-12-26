@@ -6,14 +6,14 @@
 /*   By: kousuzuk <kousuzuk@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/22 14:26:54 by kousuzuk          #+#    #+#             */
-/*   Updated: 2023/12/22 14:38:52 by kousuzuk         ###   ########.fr       */
+/*   Updated: 2023/12/26 13:35:15 by kousuzuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../incs/minirt.h"
 
-void	read_each_objects_hub(char *line, t_scene *scene, int line_num,
-		int *store_shape_num)
+void	read_each_objects_hub(char *line, t_scene *scene, int *store_shape_num,
+		t_read_cnt *read_cnt)
 {
 	char	**info;
 
@@ -21,32 +21,30 @@ void	read_each_objects_hub(char *line, t_scene *scene, int line_num,
 	if (!info)
 		error_exit(ERROR_MALLOC);
 	if (!ft_strncmp(info[0], "A", 2))
-		read_ambient_light_info(scene, info, line_num);
+		read_ambient_light_info(scene, info, read_cnt->line_num, read_cnt);
 	else if (!ft_strncmp(info[0], "C", 2))
-		read_camera_info(scene, info, line_num);
+		read_camera_info(scene, info, read_cnt->line_num, read_cnt);
 	else if (!ft_strncmp(info[0], "L", 2))
-		read_light_info(scene, info, line_num);
+		read_light_info(scene, info, read_cnt->line_num, read_cnt);
 	else if (!ft_strncmp(info[0], "sp", 3))
-		read_sphere_info(scene, info, line_num, store_shape_num);
+		read_sphere_info(scene, info, read_cnt->line_num, store_shape_num);
 	else if (!ft_strncmp(info[0], "pl", 3))
-		read_plane_info(scene, info, line_num, store_shape_num);
+		read_plane_info(scene, info, read_cnt->line_num, store_shape_num);
 	else if (!ft_strncmp(info[0], "cy", 3))
-		read_cylinder_info(scene, info, line_num, store_shape_num);
+		read_cylinder_info(scene, info, read_cnt->line_num, store_shape_num);
 	else
 	{
 		ft_printf_stderr("Error :.rt : line %i: invalid identifier\n",
-			line_num);
+			read_cnt->line_num);
 		exit(1);
 	}
 	ft_split_array_all_free(info);
 }
 
-void	read_objects(char *line, t_scene *scene, int fd)
+void	read_objects(char *line, t_scene *scene, int fd, t_read_cnt *read_cnt)
 {
-	int	line_num;
 	int	store_shape_num;
 
-	line_num = 1;
 	store_shape_num = 0;
 	while (line)
 	{
@@ -58,19 +56,19 @@ void	read_objects(char *line, t_scene *scene, int fd)
 			line = get_next_line(fd);
 			continue ;
 		}
-		read_each_objects_hub(line, scene, line_num, &store_shape_num);
+		read_each_objects_hub(line, scene, &store_shape_num, read_cnt);
 		free(line);
-		if (line_num < INT_MAX)
+		if (read_cnt->line_num < INT_MAX)
 			line = get_next_line(fd);
 		else
 			break ;
-		line_num++;
+		read_cnt->line_num++;
 	}
-	if (line_num == 1)
+	if (read_cnt->line_num == 1)
 		error_exit(ERROR_EMPTY_FILE);
 }
 
-void	read_info(t_scene *scene, char *filename)
+void	read_info(t_scene *scene, char *filename, t_read_cnt *read_cnt)
 {
 	int		fd;
 	char	*line;
@@ -81,6 +79,6 @@ void	read_info(t_scene *scene, char *filename)
 	line = get_next_line(fd);
 	if (!line)
 		error_exit(ERROR_EMPTY_FILE);
-	read_objects(line, scene, fd);
+	read_objects(line, scene, fd, read_cnt);
 	close(fd);
 }
