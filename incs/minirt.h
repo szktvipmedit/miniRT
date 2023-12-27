@@ -6,7 +6,7 @@
 /*   By: kousuzuk <kousuzuk@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/22 14:17:47 by jyasukaw          #+#    #+#             */
-/*   Updated: 2023/12/26 13:40:38 by kousuzuk         ###   ########.fr       */
+/*   Updated: 2023/12/27 14:41:52 by kousuzuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,8 @@
 # define NOTICE_MAX_OBJECTS "The maximum number of objects is INT_MAX\n"
 # define ERROR_INFO_CNT "Please specify one information each for ambient_light,\
 camera, and light\n"
-
+# define ERROR_NORMAL "Cannot be displayed because the normal vector is [0, 0,\
+0]\n"
 typedef struct s_vec3
 {
 	double			x;
@@ -262,11 +263,13 @@ double				ft_atod(char *str);
 void				normalize_color(t_color3 *col);
 int					is_all_spaces(char *str);
 
-void				store_cylinder_info_out(t_intersection_point *out_intp,
-						t_cy *cy, t_cylinder *cylin);
+void	store_cylinder_info_out(t_intersection_point *out_intp,
+								t_cy *cy,
+								t_cylinder *cylin);
 
-void				store_cylinder_info_in(t_intersection_point *out_intp,
-						t_cy *cy, t_cylinder *cylin);
+void	store_cylinder_info_in(t_intersection_point *out_intp,
+							t_cy *cy,
+							t_cylinder *cylin);
 void				init_read_cnt(t_read_cnt *read_cnt);
 
 #endif

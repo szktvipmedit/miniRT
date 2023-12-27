@@ -6,7 +6,7 @@
 /*   By: kousuzuk <kousuzuk@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/22 14:27:05 by kousuzuk          #+#    #+#             */
-/*   Updated: 2023/12/22 14:38:54 by kousuzuk         ###   ########.fr       */
+/*   Updated: 2023/12/27 14:41:12 by kousuzuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,5 +54,7 @@ void	store_normalized_values(t_vec3 *vec, char *info, int line_num)
 	vec->x = create_double_value(xyz[0], line_num);
 	vec->y = create_double_value(xyz[1], line_num);
 	vec->z = create_double_value(xyz[2], line_num);
+	if (vec->x == 0 && vec->y == 0 && vec->z == 0)
+		error_exit(ERROR_NORMAL);
 	ft_split_array_all_free(xyz);
 }
